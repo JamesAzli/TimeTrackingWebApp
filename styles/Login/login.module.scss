@@ -1,0 +1,73 @@
+.gButton{
+    margin-top: 30px;
+    position: absolute;
+    width: 436px;
+    height: 45px;
+    left: 250px;
+    top: 745px;
+    }
+    .paperStyle{
+      display: flex;
+      padding :20;
+      height:70vh;
+      width:280;
+      margin: 20px auto;
+    }
+    .avatarStyle{
+      background-color:#1bbd7e;
+    }
+    
+    .FormButton {
+      background: #000000;
+      border-radius: 4px;
+      margin:20px;
+      align-items: center;
+      text-align: center;
+      color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 5px;
+      width: 350px;
+      height: 35px;
+      pointer-events: none;
+    }
+    .Font{
+      font-family: 'Lato';
+    }
+    .TextField{
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    padding: 0px;
+    width: 400px;
+    height: 50px;
+    border-radius: 4px;
+    }
+    
+    .GoogleButton{
+      display: flex;
+      flex-direction: column;
+      justify-content: left;
+      margin-top: 1rem;
+      align-items: center;
+    }
+    .backdrop {
+      display: flex;
+      position: absolute;
+      transform: rotate(-90deg) translateY(-120px) translateX(10px);
+      font-weight: 600;
+      background: radial-gradient(#FFFF, #852525);
+      background-clip: text;
+      color: transparent;
+      height: 100%;
+      top: 15px;
+      left: 675px;
+      bottom: -40px;
+      font: bold 215px Poppins, sans-serif;
+    }
+    .image{
+      width: 800px;
+      height:500px;
+    }
+    

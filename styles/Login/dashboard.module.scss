@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@900&family=Open+Sans:wght@400;500&family=Roboto&display=swap');
+
+.AppBar{
+    background-color: #852525;
+}
+.logo{
+    width: 100px;
+    height: 60px;
+}
+.bg{
+    height: 100%;
+    width: 100%;
+}
+.logo{
+    height: 50px;
+    width: 150px;
+    margin-left: 1rem;
+}
+.menuItem{
+    background-color: #852525;
+}
+.goodday{
+    align-items: center;
+    text-align: center;
+    margin-top: 2rem;
+    font-family: 'Lato', sans-serif;
+    font-size: 30px;
+}
+.date{
+    text-align: center;
+    align-items: center;
+    margin-top: 0rem;
+    color:#852525;
+    font-size: 40px;
+
+}
+.time{
+    text-align: center;
+    align-items: center;
+    margin-top: 3rem;
+    align-items: center;
+    text-align: center;
+    margin-top: 2rem;
+    font-family: 'Lato', sans-serif;
+    font-size: 150px;
+    color:#852525
+}
+.background{
+    height: 100%;
+    width: 100%;
+    background-image: linear-gradient(to bottom, #ffffff, #f9f6fb,
+     #f5edf4, #f4e3eb, #f3d9df, #f2d5d9, #f1d0d3, #efcccc,
+      #eecccc, #eecccc, #edcccc, #eccccc);
+      background-size: cover;
+}
+.button{
+    align-items: center;
+    text-align: center;
+    background-color: black;
+    color:#ffffff;
+    font-size: 20px;
+    width: 100;
+    height: 50;
+    margin-top: 3rem;
+    margin-bottom: 5rem;
+}
+
+.dbutton{
+    align-items: center;
+    text-align: center;
+
+}
