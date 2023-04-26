@@ -45,7 +45,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import {auth} from '../firebase';
 import {db} from '../firebase'
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import Avatar from "@mui/material/Avatar";
 
 export default function MenuAppBar() {
@@ -56,6 +56,7 @@ export default function MenuAppBar() {
   const [longitude, setLongitude] = useState(null);
   const [place, setPlace] = useState(null);
   const [photoURL, setphotoURL] = useState(null);
+  const [documentId, setDocumentId] = useState(null);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -91,10 +92,12 @@ export default function MenuAppBar() {
         setphotoURL(user.photoURL)
       } else {
         setDisplayName(null);
+        setphotoURL(null);
       }
     });
   }, []);
 
+  // const docRef = doc(db, "Reports-Admin");
   const date = new Date();
   const showDate = date.toDateString();
   const showTime = date.toLocaleTimeString([], {
@@ -112,6 +115,7 @@ export default function MenuAppBar() {
       hour: "2-digit",
       minute: "2-digit",
     });
+    
     toast.success("TimeIn Recorded!", {
       position: "top-center",
       autoClose: 5000,
@@ -123,19 +127,54 @@ export default function MenuAppBar() {
       theme: "light",
     });
     setDateString(showTime);
-
-    // const user = result.user;
-    // const uid = user.uid;
-    // const name = user.displayName;
-    // const location = place;
-
-    await addDoc(collection(db, "Reports-Admin"), {
-      timein: showTime,
-      name: displayName,
-      location: place,
-      date: showDate,
-    })
+    try {
+      const docRef = await addDoc(collection(db, "Reports-Admin"), {
+        timein: showTime,
+        name: displayName,
+        location: place,
+        date: showDate,
+      });
+      
+      console.log("New document created with ID: ", docRef.id);
+      setDocumentId(docRef.id);
+    // await addDoc(collection(db, "Reports-Admin"), {
+    //   timein: showTime,
+    //   timein: showTime,
+    //   name: displayName,
+    //   location: place,
+    //   date: showDate,
+    // });
+    // setDocumentId(docRef.id);
+   } catch (error) {
+    console.error("Error adding document: ", error);
   }
+}
+const handleTimeoutClick = async () => {
+  const date = new Date();
+  const showTime = date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  try {
+    await updateDoc(doc(db, "Reports-Admin", documentId), {
+      timeout: showTime,
+    });
+
+    toast.success("Timeout Recorded!", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  } catch (error) {
+    console.error("Error updating document: ", error);
+  }
+};
 
 
   const handleChange = (e) => {
@@ -152,6 +191,12 @@ export default function MenuAppBar() {
     window.location.reload
     window.location.href = '../Login/Reports'
   };
+
+  const logout = () => {
+    localStorage.clear();
+    window.location.reload;
+    window.location.href = "/";
+  }
 
   return (
     <>
@@ -212,7 +257,7 @@ export default function MenuAppBar() {
                   <MenuItem className={styles.menuItem} onClick={handleClose}>
                     Reports
                   </MenuItem>
-                  <MenuItem className={styles.menuItem} onClick={handleClose}>
+                  <MenuItem className={styles.menuItem} onClick={logout}>
                     Logout
                   </MenuItem>
                 </Menu>
@@ -239,7 +284,10 @@ export default function MenuAppBar() {
 
       <div className={styles.dbutton}>
         <Button onClick={handleClick} className={styles.button}>
-          TimeIn
+          Time-In
+        </Button>
+        <Button onClick={handleTimeoutClick}  className={styles.button}>
+          Time-out
         </Button>
         {dateString && <p>TimeIn Recorder at: {dateString}</p>}
         <ToastContainer

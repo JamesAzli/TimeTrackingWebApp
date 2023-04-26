@@ -18,13 +18,14 @@ function Reports() {
 
   return (
      <div>
-      <h1>Reports-Admin Collection</h1>
+      <h1>Reports-Admin</h1>
       <table>
         <thead>
           <tr>
             <th>Name</th>
             <th>Location</th>
             <th>Time-in</th>
+            <th>Time-out</th>
             <th>Date</th>
           </tr>
         </thead>
@@ -34,6 +35,7 @@ function Reports() {
               <td>{report.name}</td>
               <td>{report.location}</td>
               <td>{report.timein}</td>
+              <td>{report.timeout}</td>
               <td>{report.date}</td>
             </tr>
           ))}
