@@ -6,7 +6,7 @@ import Divider from '@mui/material/Divider';
 import { red } from '@mui/material/colors';
 import List from '@mui/material/List';
 import CssBaseline from '@mui/material/CssBaseline';
-import styles from '../styles/header.module.scss'
+import styles from '../styles/Login/header.module.scss'
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';

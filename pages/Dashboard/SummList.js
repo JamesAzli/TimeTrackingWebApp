@@ -14,7 +14,7 @@ import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import PrintIcon from '@mui/icons-material/Print';
-import stylerep from '../../styles/adminreports.module.scss'
+import stylerep from '../../styles/Login/adminreports.module.scss'
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';

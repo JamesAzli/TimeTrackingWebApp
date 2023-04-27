@@ -14,7 +14,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import logo from '../playground_assets/GiantMiniLogo.png'
-import styles from '../styles/header.module.scss'
+import styles from '../styles/Login/header.module.scss'
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import LogoutIcon from '@mui/icons-material/Logout';

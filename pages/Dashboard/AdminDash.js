@@ -1,6 +1,6 @@
 import React from "react";
-import Sidenav from "../../components/Sidenav";
-import Navbar from "../../components/Navbar";
+import Sidenav from "../../components/SidenavAdmin";
+import Navbar from "../../components/NavbarAdmin";
 import Box from "@mui/material/Box";
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
@@ -8,7 +8,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Stack from '@mui/material/Stack';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import styledash from '../../styles/admindash.module.scss'
+import styledash from '../../styles/Login/admindash.module.scss'
 
 
 export default function Admindash(){

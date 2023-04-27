@@ -1,9 +1,9 @@
 import React from "react";
-import Sidenav from "../../components/Sidenav";
+import Sidenav from "../../components/SidenavAdmin";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Navbar from "../../components/Navbar";
-import stylerep from '../../styles/adminreports.module.scss'
+import Navbar from "../../components/NavbarAdmin";
+import stylerep from '../../styles/Login/adminreports.module.scss'
 import SummList from "../Dashboard/SummList";
 
 
