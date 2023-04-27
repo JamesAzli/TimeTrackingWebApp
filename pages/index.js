@@ -2,8 +2,8 @@
 import Sidenav from "../components/SidenavAdmin";
 // import AdminDash from "./Dashboard/AdminDash"
 import AdminReports from "./Dashboard/AdminReports"
-import styles from '../styles/Login/adminreports.module.scss'
-// import styles from '../styles/header.module.scss'
+import stylerep from '../styles/Login/adminreports.module.scss'
+import stylehead from '../styles/Login/header.module.scss'
 import Navbar from "../components/Navbar"
 
 

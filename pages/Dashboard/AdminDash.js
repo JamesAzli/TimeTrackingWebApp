@@ -1,6 +1,6 @@
 import React from "react";
-import Sidenav from "../../components/SidenavAdmin";
-import Navbar from "../../components/NavbarAdmin";
+import SidenavAdmin from "../../components/SidenavAdmin";
+import NavbarAdmin from "../../components/NavbarAdmin";
 import Box from "@mui/material/Box";
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
@@ -15,10 +15,10 @@ export default function Admindash(){
     return(
         <>
         <div className={styledash.bgcolor}>
-        <Navbar />
+        <NavbarAdmin />
        <Box height= {70} />
         <Box sx={{display: "flex"}}>
-        <Sidenav />
+        <SidenavAdmin />
         <Box component="main" sx={{flexGrow: 1, p:3 }}>
         <Grid container spacing={2}>
         <Grid item xs={12}>

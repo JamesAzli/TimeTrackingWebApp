@@ -173,7 +173,7 @@ export default function Navbar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed" className={styles.AppBar} >
+      <AppBar position="fixed" elevation= "0" className={styles.AppBar} >
         <Toolbar>
           <IconButton
             size="large"

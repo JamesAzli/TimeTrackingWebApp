@@ -1,20 +1,20 @@
 import React from "react";
-import Sidenav from "../../components/SidenavAdmin";
+import SidenavAdmin from "../../components/SidenavAdmin";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Navbar from "../../components/NavbarAdmin";
+import NavbarAdmin from "../../components/NavbarAdmin";
 import stylerep from '../../styles/Login/adminreports.module.scss'
 import SummList from "../Dashboard/SummList";
 
 
-export default function DataEntry(){
+export default function AdminReports(){
   return (
     <>
     <div className={stylerep.bgcolor}>
-      <Navbar />
+      <NavbarAdmin />
       <Box height={70} />
       <Box sx={{display: "flex"}}>
-        <Sidenav />
+        <SidenavAdmin />
         <Box component="main" sx={{ flexGrow:1, p:3}}>
           <SummList />
         </Box>
