@@ -1,0 +1,25 @@
+.bgcolor{
+    min-height: 100vh;
+    background : linear-gradient(to right, #ffffff, #f9f6fb, #f5edf4, #f4e3eb, 
+    #f3d9df, #f2d5d9, #f1d0d3, #efcccc, #eecccc, #eecccc, #edcccc, #eccccc);
+}
+.searchmargin{
+    margin-left: 2rem;
+}
+.listmargin{
+    margin-right: 16rem;
+    color: #FFFF;
+    background-color: #852525;
+    &:hover {
+        color:#852525;
+        background-color: #eccccc;
+        border-color: #852525;
+    }
+}
+.tablehead{
+    background-color: #dad8d8;
+    
+}
+
+
+
