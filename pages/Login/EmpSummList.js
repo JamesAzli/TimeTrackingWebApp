@@ -12,8 +12,6 @@ import Box from "@mui/material/Box";
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import PrintIcon from '@mui/icons-material/Print';
 import stylerep from '../../styles/Login/empreports.module.scss'
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
