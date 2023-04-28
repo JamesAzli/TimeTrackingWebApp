@@ -110,7 +110,7 @@ export default function SummList() {
         gutterBottom
         variant="h5"
         component="div"
-        sx={{padding: "30px" }}
+        sx={{padding: "10px" }}
         >
             Attendance Summary
         </Typography>
@@ -136,7 +136,6 @@ export default function SummList() {
                   <IconButton type="button" sx={{ p: '5px' }} aria-label="search">
                   <SearchIcon />
                   </IconButton>
-                 {/* <Divider sx={{ height: 20, m: 0.5 }} orientation="vertical" /> */}
                 </Paper>
                 {/* )}
                 /> */}

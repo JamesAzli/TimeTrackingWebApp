@@ -3,7 +3,7 @@ import SidenavAdmin from "../../components/SidenavAdmin";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import NavbarEmp from "../../components/NavbarEmp";
-import stylerep from '../../styles/Login/adminreports.module.scss'
+import stylerep from '../../styles/Login/empreports.module.scss'
 import EmpSummList from "../Login/EmpSummList";
 
 
