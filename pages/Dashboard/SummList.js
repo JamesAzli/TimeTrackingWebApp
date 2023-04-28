@@ -110,7 +110,8 @@ export default function SummList() {
         gutterBottom
         variant="h5"
         component="div"
-        sx={{padding: "10px" }}
+        align='center'
+        sx={{padding: ".5rem" }}
         >
             Attendance Summary
         </Typography>

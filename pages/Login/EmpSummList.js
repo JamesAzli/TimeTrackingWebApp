@@ -109,7 +109,8 @@ export default function SummList() {
         gutterBottom
         variant="h5"
         component="div"
-        sx={{padding: "10px" }}
+        align='center'
+        sx={{padding: ".5rem" }}
         >
             Attendance Summary
         </Typography>
@@ -128,9 +129,11 @@ export default function SummList() {
              <Button variant="outlined" startIcon={<ArrowBackIcon />} className={stylerep.listmargin}>
                     Back to Dashboard
                 </Button>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 16 }}>
+                </Typography>
                 <Paper
                  component="form"
-                 sx={{ p: '4px 4px', display: 'flex', alignItems: 'center', width: 400, }} className={stylerep.searchmargin}>
+                 sx={{ p: '.30rem .30rem', display: 'flex', alignItems: 'center', width: 300, }} className={stylerep.searchmargin}>
                  <InputBase
                  sx={{ ml: 1, flex: 1 }}
                  placeholder="Search"
