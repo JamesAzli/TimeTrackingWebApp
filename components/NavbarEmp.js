@@ -155,16 +155,7 @@ export default function Navbar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" elevation= "0" className={styles.AppBar} >
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-            onClick={()=>updateOpen(!dopen)}
-          >
-            <MenuIcon />
-          </IconButton>
+          
           <Image src={logo} className={styles.logo}/>
           <Typography
             variant="h6"
@@ -173,6 +164,7 @@ export default function Navbar() {
             sx={{ display: { xs: 'none', sm: 'block' } }}
           >
           </Typography>
+          
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton

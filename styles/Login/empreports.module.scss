@@ -1,14 +1,14 @@
 .bgcolor{
     min-height: 100vh;
-    background : linear-gradient(to right, #ffffff, #f9f6fb, #f5edf4, #f4e3eb, 
-    #f3d9df, #f2d5d9, #f1d0d3, #efcccc, #eecccc, #eecccc, #edcccc, #eccccc);
+    background: linear-gradient(to bottom, #852525, #aa596c, #c190ab, #d9c9dc, #ffffff);
 }
 .searchmargin{
     margin-left: 2rem;
     border-radius: 10rem;
 }
 .listmargin{
-    margin-right: 16rem;
+    margin-left: 1rem;
+    text-transform: capitalize !important;
     color: #FFFF;
     background-color: #852525;
     &:hover {

@@ -14,9 +14,10 @@ import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import PrintIcon from '@mui/icons-material/Print';
-import stylerep from '../../styles/Login/adminreports.module.scss'
+import stylerep from '../../styles/Login/empreports.module.scss'
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SearchIcon from '@mui/icons-material/Search';
 import Swal from 'sweetalert2'
 
@@ -125,6 +126,10 @@ export default function SummList() {
             //  onChange={(e,v)} => filterData(v)}
              getOptionlabel={(rows)} => rows.date || ""}
              renderInput={(params)} => ( */}
+
+             <Button variant="outlined" startIcon={<ArrowBackIcon />} className={stylerep.listmargin}>
+                    Back to Dashboard
+                </Button>
                 <Paper
                  component="form"
                  sx={{ p: '4px 4px', display: 'flex', alignItems: 'center', width: 400, }} className={stylerep.searchmargin}>
@@ -136,23 +141,12 @@ export default function SummList() {
                   <IconButton type="button" sx={{ p: '5px' }} aria-label="search">
                   <SearchIcon />
                   </IconButton>
-                 {/* <Divider sx={{ height: 20, m: 0.5 }} orientation="vertical" /> */}
+                
                 </Paper>
                 {/* )}
                 /> */}
                 <Typography variant="h6" component="div" sx={{ flexGrow: .95 }}>
                 </Typography>
-                
-                <Button onClick={confirmation} 
-                sx={{color: "#ccd1d1"}} 
-                variant="contained" 
-                endIcon={<FileDownloadIcon />} 
-                className={stylerep.listmargin}>
-                    Export
-                </Button>
-                <Button variant="contained" endIcon={<PrintIcon />} className={stylerep.listmargin}>
-                    Print
-                </Button>
         </Stack>
         <Box height={10} />
       <TableContainer sx={{ maxHeight: 440 }}>
