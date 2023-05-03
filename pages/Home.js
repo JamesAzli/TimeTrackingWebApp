@@ -47,6 +47,8 @@ import {auth} from '../firebase';
 import {db} from '../firebase'
 import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import Avatar from "@mui/material/Avatar";
+import cookie from "js-cookie";
+import axios from 'axios';
 
 export default function MenuAppBar() {
   // const [auth, setAuth] = useState(true);
@@ -57,6 +59,9 @@ export default function MenuAppBar() {
   const [place, setPlace] = useState(null);
   const [photoURL, setphotoURL] = useState(null);
   const [documentId, setDocumentId] = useState(null);
+  const [timeIn, setTimeIn] = useState(null);
+  const [timeOut, setTimeOut] = useState(null);
+  // const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -65,24 +70,28 @@ export default function MenuAppBar() {
         setLongitude(position.coords.longitude);
       },
       (error) => {
+        // setErrorMessage("Location access is not enabled")
+        alert('"Location access is not enabled"')
         console.error(error);
       }
     );
   }, []);
 
   useEffect(() => {
-    if (latitude && longitude) {
-      const url = `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=cada18a586924614b6d60d9ac25c1945`;
-      fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
+    const fetchAddress = async () => {
+      if (latitude && longitude) {
+        const url = `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=cada18a586924614b6d60d9ac25c1945`;
+        try {
+          const response = await fetch(url);
+          const data = await response.json();
           const address = data.results[0].formatted;
           setPlace(address);
-        })
-        .catch((error) => {
+        } catch (error) {
           console.error(error);
-        });
-    }
+        }
+      }
+    };
+    fetchAddress();
   }, [latitude, longitude]);
 
   useEffect(() => {
@@ -97,7 +106,59 @@ export default function MenuAppBar() {
     });
   }, []);
 
-  // const docRef = doc(db, "Reports-Admin");
+  useEffect(() => {
+    const getDocumentId = cookie.get("documentId");
+    if (getDocumentId) {
+      setDocumentId(getDocumentId);
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchTimeIn = async () => {
+      try {
+        const response = await fetch("http://worldtimeapi.org/api/timezone/Asia/Manila/");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        const dateTime = new Date(data.datetime);
+        const timeString = dateTime.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+        setTimeIn(timeString);
+      } catch (err) {
+        console.error(err);
+        setTimeIn(fetchTimeIn, 5000); // retry after 5 seconds
+      }
+    };
+    fetchTimeIn();
+  }, []);
+
+  useEffect(() => {
+    const fetchTimeOut = async () => {
+      try {
+        const response = await fetch("http://worldtimeapi.org/api/timezone/Asia/Manila/");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        const dateTime = new Date(data.datetime);
+        const timeString = dateTime.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+        setTimeOut(timeString);
+      } catch (err) {
+        console.error(err);
+        setTimeout(fetchTimeOut, 5000); // retry after 5 seconds
+      }
+    };
+    fetchTimeOut();
+  }, []);
+
   const date = new Date();
   const showDate = date.toDateString();
   const showTime = date.toLocaleTimeString([], {
@@ -108,14 +169,22 @@ export default function MenuAppBar() {
   const [dateString, setDateString] = useState("");
 
   const handleClick = async () => {
+    // const response = await fetch("http://worldtimeapi.org/api/timezone/Asia/Manila/");
+    // const data = await response.json();
+    // const dateTime = new Date(data.dateTime);
+    // const timeString = dateTime.toLocaleTimeString([], {
+    //   hour: "2-digit",
+    //   minute: "2-digit",
+    //   hour12: true,
+    // });
+    // setTimeIn(timeString);
 
-    const date = new Date();
-    const showDate = date.toDateString();
-    const showTime = date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    
+    // const date = new Date();
+    // const showDate = date.toDateString();
+    // const showTime = date.toLocaleTimeString([], {
+    //   hour: "2-digit",
+    //   minute: "2-digit",
+    // });
     toast.success("TimeIn Recorded!", {
       position: "top-center",
       autoClose: 5000,
@@ -129,7 +198,7 @@ export default function MenuAppBar() {
     setDateString(showTime);
     try {
       const docRef = await addDoc(collection(db, "Reports-Admin"), {
-        timein: showTime,
+        timein: timeIn,
         name: displayName,
         location: place,
         date: showDate,
@@ -137,31 +206,37 @@ export default function MenuAppBar() {
       
       console.log("New document created with ID: ", docRef.id);
       setDocumentId(docRef.id);
-    // await addDoc(collection(db, "Reports-Admin"), {
-    //   timein: showTime,
-    //   timein: showTime,
-    //   name: displayName,
-    //   location: place,
-    //   date: showDate,
-    // });
-    // setDocumentId(docRef.id);
-   } catch (error) {
+      cookie.set("documentId", docRef.id, { expires: 1 });
+    }catch (error) {
     console.error("Error adding document: ", error);
   }
 }
 const handleTimeoutClick = async () => {
-  const date = new Date();
-  const showTime = date.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  // const response = await fetch("http://worldtimeapi.org/api/timezone/Asia/Manila/");
+  //   const data = await response.json();
+  //   const dateTime = new Date(data.dateTime);
+  //   const timeString = dateTime.toLocaleTimeString([], {
+  //     hour: "2-digit",
+  //     minute: "2-digit",
+  //     hour12: true,
+  //   });
+  //   setTimeOut(timeString);
+  
+  // const date = new Date();
+  // const showDate = date.toDateString();
+  // const showTime = date.toLocaleTimeString([], {
+  //   hour: "2-digit",
+  //   minute: "2-digit",
+  // });
 
-  try {
-    await updateDoc(doc(db, "Reports-Admin", documentId), {
-      timeout: showTime,
+  const documentRef = doc(db, "Reports-Admin", documentId);
+    await updateDoc(documentRef, {
+      timeout: timeOut,
     });
+    setDocumentId(null);
+    cookie.remove("documentId");
 
-    toast.success("Timeout Recorded!", {
+    toast.success("TimeOut Recorded!", {
       position: "top-center",
       autoClose: 5000,
       hideProgressBar: false,
@@ -171,9 +246,6 @@ const handleTimeoutClick = async () => {
       progress: undefined,
       theme: "light",
     });
-  } catch (error) {
-    console.error("Error updating document: ", error);
-  }
 };
 
 
