@@ -5,11 +5,16 @@ import Typography from "@mui/material/Typography";
 import NavbarEmp from "../../components/NavbarEmp";
 import stylerep from '../../styles/Login/empreports.module.scss'
 import EmpSummList from "../Login/EmpSummList";
-
+import Head from 'next/head';
 
 export default function EmpReports(){
   return (
     <>
+    <Head>
+        <title>
+          Reports | GIANT
+        </title>
+      </Head>
     <div className={stylerep.bgcolor}>  
       <NavbarEmp />
       <Box height={70} />
@@ -18,8 +23,6 @@ export default function EmpReports(){
           <EmpSummList />
         </Box>
       </Box>
-
-
     </div>
     </>
 

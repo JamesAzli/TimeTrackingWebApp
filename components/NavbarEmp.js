@@ -9,8 +9,7 @@ import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import logo from '../playground_assets/GiantMiniLogo.png'
@@ -110,12 +109,20 @@ export default function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-        <MenuItem onClick={handleMenuClose}  >
+
+       <MenuItem onClick={handleMenuClose}  >
+          <ListItemIcon >
+           <AssessmentIcon  fontSize="small" sx={{ color: '#852525' }} />
+          </ListItemIcon>
+          <ListItemText sx={{ color: '#852525' }} >Reports</ListItemText>
+        </MenuItem>
+      <MenuItem onClick={handleMenuClose}  >
           <ListItemIcon >
             <LogoutIcon fontSize="small" sx={{ color: '#852525' }} />
           </ListItemIcon>
           <ListItemText sx={{ color: '#852525' }} >Logout</ListItemText>
         </MenuItem>
+
     </Menu>
   );
 

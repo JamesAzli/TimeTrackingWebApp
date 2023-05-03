@@ -18,30 +18,20 @@
     }
     
     .FormButton {
-      background: #000000;
-      border-radius: 4px;
-      margin:20px;
-      align-items: center;
-      text-align: center;
-      color: #FFFFFF;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 5px;
-      width: 350px;
-      height: 35px;
-      pointer-events: none;
+      background: #852525;
+      &:hover {
+        color:#FFFF;
+        background-color: #852525;
+        border-color: #852525;
+    }
+      text-transform: capitalize !important;
+  
     }
     .Font{
       font-family: 'Lato';
     }
     .TextField{
-    display: flex;
-    flex-direction: column;
-    justify-content: right;
-    padding: 0px;
-    width: 400px;
-    height: 50px;
+    margin-bottom: 0%;
     border-radius: 4px;
     }
     
@@ -52,22 +42,12 @@
       margin-top: 1rem;
       align-items: center;
     }
-    .backdrop {
-      display: flex;
-      position: absolute;
-      transform: rotate(-90deg) translateY(-120px) translateX(10px);
-      font-weight: 600;
-      background: radial-gradient(#FFFF, #852525);
-      background-clip: text;
-      color: transparent;
-      height: 100%;
-      top: 15px;
-      left: 675px;
-      bottom: -40px;
-      font: bold 215px Poppins, sans-serif;
-    }
     .image{
       width: 800px;
       height:500px;
+    }
+    .labels{
+      margin-right: 65%;
+      
     }
     

@@ -1,6 +1,6 @@
-// import LoginSignIn from "./Login/login-signin"
+import Login from "./Login/Login"
 import Sidenav from "../components/SidenavAdmin";
-// import AdminDash from "./Dashboard/AdminDash"
+import AdminDash from "./Dashboard/AdminDash"
 import EmpReports from "./Login/EmpReports";
 import AdminReports from "./Dashboard/AdminReports"
 import stylerep from '../styles/Login/adminreports.module.scss'
@@ -15,7 +15,7 @@ function HomePage() {
    {/* <div className={styles.background}>     */}
    {/* <Sidenav/> */}
    {/* <Navbar /> */}
-   {/* <LoginSignIn /> */}
+   {/* <Login /> */}
    <EmpReports />
     {/* <AdminReports/> */}
     {/* <AdminDash/> */}
