@@ -69,7 +69,11 @@ function LoginT(){
       </Head>
         <Box
           sx={{
-            marginTop: 6,
+            my: 8,
+            mx: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
           }}
         >
           <Grid container>
@@ -78,7 +82,7 @@ function LoginT(){
             <Grid
               item
               xs={12}
-              sm={12}
+              sm={8}
               md={5}
               component={Paper}
               elevation={6}
@@ -122,10 +126,10 @@ function LoginT(){
                 />
               
                 
-                <FormControlLabel className={styles.labels} 
+                {/* <FormControlLabel className={styles.labels} 
                   control={<Checkbox value="remember"  size="small" />}
                   label= "Remember me" 
-                />
+                /> */}
 
                  <Button  className={styles.FormButton} 
                   fullWidth
