@@ -105,7 +105,7 @@ export default function SummList() {
   };
   
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }} >
+    <Paper sx={{ width: '100%', overflow: 'hidden' }} elevation={8} >
         <Typography
         gutterBottom
         variant="h5"

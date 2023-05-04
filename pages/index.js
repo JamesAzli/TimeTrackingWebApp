@@ -15,9 +15,9 @@ function HomePage() {
    {/* <div className={styles.background}>     */}
    {/* <Sidenav/> */}
    {/* <Navbar /> */}
-   <Login />
+   {/* <Login /> */}
    {/* <EmpReports /> */}
-    {/* <AdminReports/> */}
+    <AdminReports/>
     {/* <AdminDash/> */}
    
     {/* </div> */}

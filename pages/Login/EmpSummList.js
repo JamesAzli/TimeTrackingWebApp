@@ -104,7 +104,7 @@ export default function SummList() {
   };
   
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }} >
+    <Paper sx={{ width: '100%', overflow: 'hidden' }} elevation={8}   >
         <Typography
         gutterBottom
         variant="h5"
@@ -115,7 +115,7 @@ export default function SummList() {
             Attendance Summary
         </Typography>
         <Divider />
-        <Box height={10} />
+        <Box height={10}/>
         <Stack direction="row" spacing={2}>
             {/* <Autocomplete
              disablePortal
@@ -126,7 +126,11 @@ export default function SummList() {
              getOptionlabel={(rows)} => rows.date || ""}
              renderInput={(params)} => ( */}
 
-             <Button variant="outlined" startIcon={<ArrowBackIcon />} className={stylerep.listmargin}>
+             <Button 
+             sx={{ '& .MuiSvgIcon-root': { fontSize: 16 } }}
+             size="small" 
+             variant='outlined'
+             startIcon={<ArrowBackIcon />} className={stylerep.listmargin} >
                     Back to Dashboard
                 </Button>
                 <Typography variant="h6" component="div" sx={{ flexGrow: 16 }}>
@@ -144,8 +148,7 @@ export default function SummList() {
                   </IconButton>
                 
                 </Paper>
-                {/* )}
-                /> */}
+                
                 <Typography variant="h6" component="div" sx={{ flexGrow: .95 }}>
                 </Typography>
         </Stack>
