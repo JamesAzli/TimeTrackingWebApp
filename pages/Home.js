@@ -261,7 +261,7 @@ const handleTimeoutClick = async () => {
     setAnchorEl(null);
     localStorage.clear()
     window.location.reload
-    window.location.href = '../Login/Reports'
+    window.location.href = '../Login/sampleReport'
   };
 
   const logout = () => {
