@@ -1,0 +1,18 @@
+.gradient{
+    background: rgb(70, 68, 68);
+    background: linear-gradient(50deg, rgb(145, 17, 17) 0%, rgb(231, 226, 226)100%);
+
+}
+.gradientlight{
+    background: rgb(97, 93, 70);
+    background: linear-gradient(50deg, rgb(145, 17, 17) 0%, rgb(231, 226, 226) 100%);
+}
+.iconstyle{
+    margin-top: 20px;
+    margin-left: 20px;
+    color:aliceblue;
+}
+// .bgcolor{
+//     min-height: 100vh;
+//     background: linear-gradient(to bottom, #852525, #aa596c, #c190ab, #d9c9dc, #ffffff);
+// }
