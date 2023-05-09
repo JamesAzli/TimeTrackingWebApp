@@ -3,7 +3,6 @@ import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
-import { red } from '@mui/material/colors';
 import List from '@mui/material/List';
 import CssBaseline from '@mui/material/CssBaseline';
 import styles from '../styles/Login/header.module.scss'
@@ -18,7 +17,9 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
 import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import { useRouter } from 'next/router';
 import {useAppStore} from '../components/appStore'
+import admin from '../pages/Dashboard/AdminDash'
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -70,9 +71,19 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export default function Sidenav() {
+  const router = useRouter();
+
   const theme = useTheme();
   // const [open, setOpen] = React.useState(true);
   const open = useAppStore((state) => state.dopen);
+
+  function handleDash(){
+    router.push('../../pages/Dashboard/AdminDash');
+  }
+
+  function handleReports(){
+    router.push('/AdminReports');
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -104,7 +115,7 @@ export default function Sidenav() {
                 >
                   <DashboardCustomizeOutlinedIcon sx={{ color: '#852525' }} className={styles.fade}/>
                 </ListItemIcon>
-                <ListItemText primary="Dashboard" sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary="Dashboard" sx={{ opacity: open ? 1 : 0 }} onClick={handleDash}/>
                 <ArrowRightIcon/>
               </ListItemButton>
               <Divider />
@@ -149,7 +160,7 @@ export default function Sidenav() {
                 >
                   <AssessmentIcon sx={{ color: '#852525' }} className={styles.fade}/>
                 </ListItemIcon>
-                <ListItemText primary="Reports" sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary="Reports" sx={{ opacity: open ? 1 : 0 }} onClick={handleReports}/>
                 <ArrowRightIcon/>
               </ListItemButton>
               <Divider />

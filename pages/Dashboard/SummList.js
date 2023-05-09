@@ -18,17 +18,19 @@ import stylerep from '../../styles/Login/adminreports.module.scss'
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import Papa from 'papaparse';
+import { saveAs } from 'file-saver';
 
 const columns= [ 
   
-  { id: 'name', label: 'Name', minWidth: 200 },
+  { id: 'name', label: 'Name', minWidth: 200 } ,
   { id: 'geoloc', label: 'Geo-Location', minWidth: 200 },
   {
     id: 'date',
     label: 'Date',
     minWidth: 80,
-    align: 'right', 
+    align: 'right',
     // format: (value) => value.toLocaleString('en-US'),
   },
   {
@@ -92,18 +94,20 @@ export default function SummList() {
   };
 
   const confirmation = () => {
-    Swal.fire({
-      title: 'Successfully Collected',
-      text: "Your file is ready to download!",
-      icon: 'success',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Download'
-    
-    })
-  };
-  
+  // Convert the data to a CSV string using Papa Parse
+  const csv = Papa.unparse(rows);
+  // Save the CSV file using FileSaver.js
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  saveAs(blob, 'GiantReport.csv');
+  // Show a success message using SweetAlert
+  Swal.fire({
+    confirmButtonColor: '#852525',
+    icon: 'success',
+    title: 'Export Successful',
+    text: 'Your data has been exported to CSV file.',
+  });
+};
+
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }} elevation={8} >
         <Typography
@@ -151,7 +155,7 @@ export default function SummList() {
                     Export
                 </Button>
                 <Button variant="contained" endIcon={<PrintIcon />} className={stylerep.listmargin}>
-                    Print
+                    Print 
                 </Button>
         </Stack>
         <Box height={10} />

@@ -160,9 +160,7 @@ export default function SignInSide() {
             backgroundColor: "#852525",
             backgroundPosition: 'center',
           }}
-          />
-              
-              
+          />   
         </Grid>
       </Grid>
     

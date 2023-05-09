@@ -14,7 +14,7 @@ import styledash from '../../styles/Login/admindash.module.scss'
 export default function Admindash(){
     return(
         <>
-        <div className={styledash.bgcolor}>
+        
         <NavbarAdmin />
        <Box height= {70} />
         <Box sx={{display: "flex"}}>
@@ -55,7 +55,7 @@ export default function Admindash(){
       </Grid>
         </Box>
     </Box>
-        </div>
+       
   
 </>
 
