@@ -7,11 +7,12 @@ import { Button } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import 'firebase/auth';
-import {auth} from '../firebase';
-import {db} from '../firebase'
+import {auth} from '../../firebase';
+import {db} from '../../firebase'
 import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import cookie from "js-cookie";
-import Navbar from '../components/NavbarEmp'
+import NavbarAdmin from '../../components/NavbarAdmin';
+import SidenavAdmin from '../../components/SidenavAdmin';
 
 export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -200,18 +201,20 @@ const handleTimeoutClick = async () => {
 
   return (
     <>
-      <Box sx={{ flexGrow: 1 }}>
-        <NavbarAdmin/>
-        <Box height={70} />
+    <div>  
+      <NavbarAdmin />
+      <Box height={70} />
       <Box sx={{display: "flex"}}>
         <SidenavAdmin />
         <Box component="main" sx={{ flexGrow:1, p:3}}>
+
         <div>
           <Typography
             className={styles.goodday}
             component="div"
             sx={{ flexGrow: 1 }}
           >
+            {/* <br/> */}
             Good Day {displayName}
           </Typography>
           <div>
@@ -220,19 +223,19 @@ const handleTimeoutClick = async () => {
           </div>
         </div>
         <div className={styles.date}>{showDate}</div>
-      </Box>
+      
 
       <div className={styles.dbutton}>
         <Button onClick={handleClick} className={styles.tibutton}>
-          Time-In
+          Clock-In
         </Button>
-        <Button onClick={handleTimeoutClick}  className={styles.button}>
-          Time-Out
+        <Button onClick={handleTimeoutClick}  className={styles.tibutton}>
+          Clock-Out
         </Button>
-        {/* {dateString && <p>TimeIn Recorder at: {dateString}</p>} */}
+        {/* {dateString && <p>Time-In Recorded at: {dateString}</p>} */}
         <ToastContainer
           position="top-center"
-          autoClose={2000}
+          autoClose={5000}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick
@@ -242,11 +245,11 @@ const handleTimeoutClick = async () => {
           pauseOnHover
           theme="light"
         />
-      </div>
-
+         </div>
+        </Box>
       </Box>
-      </Box>
 
+    </div>
     </>
   );
 }
