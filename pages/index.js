@@ -16,10 +16,10 @@ function HomePage() {
    {/* <div className={styles.background}>     */}
    {/* <Sidenav/> */}
    {/* <Navbar /> */}
-   <AdminTimeInOut/>
+   {/* <AdminTimeInOut/> */}
    {/* <Login /> */}
    {/* <EmpReports /> */}
-    {/* <AdminReports/> */}
+    <AdminReports/>
     {/* <AdminDash/> */}
    
     {/* </div> */}

@@ -10,7 +10,7 @@ import SummList from "../Dashboard/SummList";
 export default function AdminReports(){
   return (
     <>
-    <div className={stylerep.bgcolor}>  
+   
       <NavbarAdmin />
       <Box height={70} />
       <Box sx={{display: "flex"}}>
@@ -19,9 +19,6 @@ export default function AdminReports(){
           <SummList />
         </Box>
       </Box>
-
-
-    </div>
     </>
 
   );

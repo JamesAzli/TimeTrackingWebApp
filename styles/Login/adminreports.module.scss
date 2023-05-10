@@ -3,8 +3,8 @@
     // background-image: linear-gradient(to top, #852525, #aa596c, #c190ab, #d9c9dc, #ffffff);
 }
 .searchmargin{
-    margin-left: 2rem;
-    border-radius: 10rem;
+    margin-left: 1rem;
+    border-radius: .5rem;
 }
 .listmargin{
     margin-right: 16rem;
@@ -17,8 +17,17 @@
     }
 }
 .tablehead{
-    background-color: #dad8d8;
-    
+    background-color: #dad8d8; 
+}
+.sort{
+    color: #852525;
+    background-color: #ffffff;
+    text-transform: capitalize !important;
+    &:hover {
+        color:#852525;
+        background-color: #ffffff;
+        border-color: #ffffff;
+    }
 }
 
 

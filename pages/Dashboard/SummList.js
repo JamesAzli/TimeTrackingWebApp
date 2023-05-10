@@ -18,9 +18,16 @@ import stylerep from '../../styles/Login/adminreports.module.scss'
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
+import { styled} from '@mui/material/styles';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import EditIcon from '@mui/icons-material/Edit';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Swal from 'sweetalert2';
 import Papa from 'papaparse';
 import { saveAs } from 'file-saver';
+
 
 const columns= [ 
   
@@ -93,6 +100,49 @@ export default function SummList() {
     
   };
 
+  const StyledMenu = styled((props) => (
+    <Menu
+      elevation={0}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      {...props}
+     />
+       ))(({ theme }) => ({
+      '& .MuiPaper-root': {
+      borderRadius: 6,
+      marginTop: theme.spacing(1),
+      minWidth: 180,
+      color: "#852525",
+      boxShadow:
+        'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+      '& .MuiMenu-list': {
+        padding: '4px 0',
+      },
+      '& .MuiMenuItem-root': {
+        '& .MuiSvgIcon-root': {
+          fontSize: 16,
+          color: "#852525",
+          marginRight: theme.spacing(1.5),
+        },
+      },
+    },
+  }));
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const confirmation = () => {
   // Convert the data to a CSV string using Papa Parse
   const csv = Papa.unparse(rows);
@@ -132,29 +182,63 @@ export default function SummList() {
              renderInput={(params)} => ( */}
                 <Paper
                  component="form"
-                 sx={{ p: '4px 4px', display: 'flex', alignItems: 'center', width: 400, }} className={stylerep.searchmargin}>
+                 sx={{ p: '2px 2px', display: 'flex', alignItems: 'center', width: 400, }} className={stylerep.searchmargin}>
                  <InputBase
-                 sx={{ ml: 1, flex: 1 }}
+                 sx={{ ml: .5, flex: 1 }}
                  placeholder="Search"
                  inputProps={{ 'aria-label': 'search' }}
                  />
-                  <IconButton type="button" sx={{ p: '5px' }} aria-label="search">
+                  <IconButton type="button" sx={{ p: '1px' }} aria-label="search">
                   <SearchIcon />
+                  <Divider orientation="vertical" flexItem />
+                  <Button className={stylerep.sort} 
+                   id="demo-customized-button"
+                  aria-controls={open ? 'demo-customized-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? 'true' : undefined}
+                  variant="contained"
+                  disableElevation
+                  onClick={handleClick}
+                  endIcon={<KeyboardArrowDownIcon />}
+                  >
+                    Sort by
+                 </Button>
+              <StyledMenu
+              id="demo-customized-menu"
+               MenuListProps={{
+              'aria-labelledby': 'demo-customized-button',
+               }}
+               anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+             >
+             <MenuItem onClick={handleClose} disableRipple>
+             <EditIcon />
+             Name
+             </MenuItem>
+             <MenuItem onClick={handleClose} disableRipple>
+             <CalendarMonthIcon />
+              Date
+             </MenuItem>
+             </StyledMenu>
                   </IconButton>
                 </Paper>
+               
                 {/* )}
                 /> */}
                 <Typography variant="h6" component="div" sx={{ flexGrow: .95 }}>
                 </Typography>
                 
-                <Button onClick={confirmation} 
+                <Button onClick={confirmation}
                 sx={{color: "#ccd1d1"}} 
                 variant="contained" 
                 endIcon={<FileDownloadIcon />} 
                 className={stylerep.listmargin}>
                     Export
                 </Button>
-                <Button variant="contained" endIcon={<PrintIcon />} className={stylerep.listmargin}>
+                <Button 
+                variant="contained" 
+                endIcon={<PrintIcon />} className={stylerep.listmargin}>
                     Print 
                 </Button>
         </Stack>
