@@ -18,12 +18,12 @@ import stylerep from '../../styles/Login/adminreports.module.scss'
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
-import { styled} from '@mui/material/styles';
+import {styled} from '@mui/material/styles';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import EditIcon from '@mui/icons-material/Edit';
+import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import SortIcon from '@mui/icons-material/Sort';
 import Swal from 'sweetalert2';
 import Papa from 'papaparse';
 import { saveAs } from 'file-saver';
@@ -87,19 +87,8 @@ const rows = [
 ];
 
 export default function SummList() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-    
-  };
-
+  //Sorting section
   const StyledMenu = styled((props) => (
     <Menu
       elevation={0}
@@ -142,7 +131,21 @@ export default function SummList() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+    
+  };
+
+//File Download
   const confirmation = () => {
   // Convert the data to a CSV string using Papa Parse
   const csv = Papa.unparse(rows);
@@ -159,7 +162,7 @@ export default function SummList() {
 };
 
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }} elevation={8} >
+    <Paper sx={{ width: '100%', overflow: 'hidden', elevation: '8' }}  >
         <Typography
         gutterBottom
         variant="h5"
@@ -180,30 +183,35 @@ export default function SummList() {
             //  onChange={(e,v)} => filterData(v)}
              getOptionlabel={(rows)} => rows.date || ""}
              renderInput={(params)} => ( */}
-                <Paper
-                 component="form"
-                 sx={{ p: '2px 2px', display: 'flex', alignItems: 'center', width: 400, }} className={stylerep.searchmargin}>
-                 <InputBase
-                 sx={{ ml: .5, flex: 1 }}
-                 placeholder="Search"
-                 inputProps={{ 'aria-label': 'search' }}
-                 />
-                  <IconButton type="button" sx={{ p: '1px' }} aria-label="search">
-                  <SearchIcon />
-                  <Divider orientation="vertical" flexItem />
-                  <Button className={stylerep.sort} 
-                   id="demo-customized-button"
-                  aria-controls={open ? 'demo-customized-menu' : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? 'true' : undefined}
-                  variant="contained"
-                  disableElevation
-                  onClick={handleClick}
-                  endIcon={<KeyboardArrowDownIcon />}
-                  >
-                    Sort by
-                 </Button>
-              <StyledMenu
+            
+            <Paper
+              component="form"
+              sx={{ p: '2px 2px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              width: 350, }} className={stylerep.searchmargin}>
+             <InputBase
+              sx={{ ml: .5, flex: 1 }}
+              placeholder="Search"
+              inputProps={{ 'aria-label': 'search' }}
+              />
+              <IconButton type="button" sx={{ p: '1px' }} aria-label="search">
+              <SearchIcon />
+              <Divider orientation="vertical" flexItem />
+              </IconButton>
+              <IconButton
+                id="demo-customized-button"
+                aria-controls={open ? 'demo-customized-menu' : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
+                variant="contained"
+                disableElevation
+                onClick={handleClick}
+               >
+                <SortIcon />
+              </IconButton>
+              </Paper>  
+             <StyledMenu
               id="demo-customized-menu"
                MenuListProps={{
               'aria-labelledby': 'demo-customized-button',
@@ -211,19 +219,22 @@ export default function SummList() {
                anchorEl={anchorEl}
               open={open}
               onClose={handleClose}
-             >
-             <MenuItem onClick={handleClose} disableRipple>
-             <EditIcon />
-             Name
+              >
+
+              <MenuItem disableRipple>
+                Sort By:
+              </MenuItem>
+              <Divider sx={{ my: 0.1 }} />
+              <MenuItem onClick={handleClose} disableRipple>
+              <SortByAlphaIcon />
+              Name
              </MenuItem>
              <MenuItem onClick={handleClose} disableRipple>
              <CalendarMonthIcon />
               Date
              </MenuItem>
-             </StyledMenu>
-                  </IconButton>
-                </Paper>
-               
+            </StyledMenu>
+          
                 {/* )}
                 /> */}
                 <Typography variant="h6" component="div" sx={{ flexGrow: .95 }}>
