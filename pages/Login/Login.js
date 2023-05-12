@@ -37,9 +37,6 @@ function LoginT(){
 
     const [user, setUser] = useState('')
     const router = useRouter();
-     const [latitude, setLatitude] = useState(null);
-     const [longitude, setLongitude] = useState(null);
-     const [place, setPlace] = useState(null);
 
     const handleClick = async () => {
     
@@ -48,16 +45,24 @@ function LoginT(){
       const uid = user.uid;
       const email = user.email;
       const name = user.displayName;
+      const role = user.role
+
 
       // Add the user to the 'users' collection in Firestore
       await addDoc(collection(db, "Client-Login"), {
         uid: user.uid,
         displayName: user.displayName,
         email: user.email,
+        role: "Employee"
       });
-      router.push('/Home');
-       
-    };
+
+        // Route to Admin Dashboard or Home based on user's role
+      if (user.role == "Admin") {
+        router.push('/Dashboard/superAdminReps');
+    } else {
+        router.push('/Home');
+    } 
+  };
     
     
     return (

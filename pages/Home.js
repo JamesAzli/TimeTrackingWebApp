@@ -49,6 +49,7 @@ import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import Avatar from "@mui/material/Avatar";
 import cookie from "js-cookie";
 import axios from 'axios';
+// import moment from "moment-timezone"
 
 export default function MenuAppBar() {
   // const [auth, setAuth] = useState(true);
@@ -61,7 +62,16 @@ export default function MenuAppBar() {
   const [documentId, setDocumentId] = useState(null);
   const [timeIn, setTimeIn] = useState(null);
   const [timeOut, setTimeOut] = useState(null);
-  // const [errorMessage, setErrorMessage] = useState('');
+  const [TR1, setTimeRendered1] = useState();
+
+  // useEffect(() => {
+  //   if (timeIn && timeOut) {
+  //     const inTime = moment(timeIn, "HH:mm");
+  //     const outTime = moment(timeOut, "HH:mm");
+  //     const hoursDiff = moment.duration(outTime.diff(inTime)).asMinutes();
+  //     setTimeRendered1(hoursDiff);
+  //   }
+  // }, [TR1]);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -160,10 +170,18 @@ export default function MenuAppBar() {
   }, []);
 
   const date = new Date();
-  const showDate = date.toDateString();
+  const showDatePage = date.toDateString();
   const showTime = date.toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
+  });
+
+  const timestamp = new Date().getTime(); // current timestamp
+  const date2 = new Date(timestamp);
+  const showDate = date2.toLocaleDateString("en-US", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "numeric",
   });
 
   const [dateString, setDateString] = useState("");
@@ -351,7 +369,7 @@ const handleTimeoutClick = async () => {
             <br />
           </div>
         </div>
-        <div className={styles.date}>{showDate}</div>
+        <div className={styles.date}>{showDatePage}</div>
       </Box>
 
       <div className={styles.dbutton}>
