@@ -14,7 +14,7 @@ import styledash from '../../styles/Login/admindash.module.scss'
 export default function Admindash(){
     return(
         <>
-        
+        <div className={styledash.bgcolor} >
         <NavbarAdmin />
        <Box height= {70} />
         <Box sx={{display: "flex"}}>
@@ -36,6 +36,7 @@ export default function Admindash(){
         </Typography>
       </CardContent>
      </Card>
+     </Stack>
      <Card sx={{ minWidth: 49 +"%", height: 150 }} className={styledash.gradientlight}>
          <CardContent>
             <div className={styledash.iconstyle}>
@@ -49,13 +50,11 @@ export default function Admindash(){
         </Typography>
       </CardContent>
      </Card>
-     </Stack>
-       
      </Grid>
       </Grid>
         </Box>
     </Box>
-       
+    </div>    
   
 </>
 

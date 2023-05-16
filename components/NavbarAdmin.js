@@ -17,6 +17,7 @@ import logo from '../playground_assets/GiantMiniLogo.png'
 import styles from '../styles/Login/header.module.scss'
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import GroupsIcon from '@mui/icons-material/Groups';
 import LogoutIcon from '@mui/icons-material/Logout';
 import {useAppStore} from '../components/appStore'
 import Image from 'next/image';
@@ -175,6 +176,13 @@ export default function Navbar() {
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+           <IconButton
+           size="large"
+           color="inherit"
+           >
+           <GroupsIcon />
+           </IconButton>
+  
             <IconButton
               size="large"
               edge="end"

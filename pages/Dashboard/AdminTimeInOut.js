@@ -13,7 +13,8 @@ import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import cookie from "js-cookie";
 import NavbarAdmin from '../../components/NavbarAdmin';
 import SidenavAdmin from '../../components/SidenavAdmin';
-import swal from 'sweetalert2';
+import styledash from '../../styles/Login/admindash.module.scss'
+import Swal from 'sweetalert2';
 
 export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -131,79 +132,100 @@ export default function MenuAppBar() {
 
   const [dateString, setDateString] = useState("");
 
-//   const handleClick = async () => {
-//     toast.success("Time-In Recorded!", {
-//       position: "top-center",
-//       autoClose: 2000,
-//       hideProgressBar: false,
-//       closeOnClick: true,
-//       pauseOnHover: true,
-//       draggable: true,
-//       progress: undefined,
-//       theme: "light",
-//     });
-//     setDateString(showTime);
-//     try {
-//       const docRef = await addDoc(collection(db, "Reports-Admin"), {
-//         timein: timeIn,
-//         name: displayName,
-//         location: place,
-//         date: showDate,
-//       });
-      
-//       console.log("New document created with ID: ", docRef.id);
-//       setDocumentId(docRef.id);
-//       cookie.set("documentId", docRef.id, { expires: 1 });
-//     }catch (error) {
-//     console.error("Error adding document: ", error);
-//   }
-// }
-// const handleTimeoutClick = async () => {
-//   const documentRef = doc(db, "Reports-Admin", documentId);
-//     await updateDoc(documentRef, {
-//       timeout: timeOut,
-//     });
-//     setDocumentId(null);
-//     cookie.remove("documentId");
 
-//     toast.success("Time-Out Recorded!", {
-//       position: "top-center",
-//       autoClose: 2000,
-//       hideProgressBar: false,
-//       closeOnClick: true,
-//       pauseOnHover: true,
-//       draggable: true,
-//       progress: undefined,
-//       theme: "light",
-//     });
-// };
-
-  function handleClick() {
+  const handleClick = async () => { 
     Swal.fire({
-      title: "Are you sure?",
-      text: "You will be clocked out of the system.",
-      icon: "warning",
-      buttons: ["Cancel", "Clock out"],
-      dangerMode: true,
-    }).then((willClockout) => {
-      if (willClockout) {
-        // do something when user confirms (e.g. clock out)
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Logged me out',
+      cancelButtonText: 'No, cancel',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Thank you!',
+          'Tme out recorded successfully',
+          'success'
+        )
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        Swal.fire(
+          'Cancelled',
+          'Time out not recorded',
+          'error'
+        )
       }
-    });
+    })
+
+    setDateString(showTime);
+    try {
+      const docRef = await addDoc(collection(db, "Reports-Admin"), {
+        timein: timeIn,
+        name: displayName,
+        location: place,
+        date: showDate,
+      });
+      
+      console.log("New document created with ID: ", docRef.id);
+      setDocumentId(docRef.id);
+      cookie.set("documentId", docRef.id, { expires: 1 });
+    }catch (error) {
+    console.error("Error adding document: ", error);
   }
-  function handleTimeoutClick() {
-    swal({
-      title: "Are you sure?",
-      text: "You will be clocked out of the system.",
-      icon: "warning",
-      buttons: ["Cancel", "Clock out"],
-      dangerMode: true,
-    }).then((willClockout) => {
-      if (willClockout) {
-        // do something when user confirms (e.g. clock out)
-      }
+}
+const handleTimeoutClick = async () => {
+  const documentRef = doc(db, "Reports-Admin", documentId);
+    await updateDoc(documentRef, {
+      timeout: timeOut,
     });
-  }
+    setDocumentId(null);
+    cookie.remove("documentId");
+
+    Swal.fire({
+          title: "Are you sure?",
+          text: "You will be clocked out of the system.",
+          icon: "warning",
+          buttons: ["Cancel", "Clock out"],
+          dangerMode: true,
+        }).then((willClockout) => {
+          if (willClockout) {
+            // do something when user confirms (e.g. clock out)
+          }
+        });
+};
+
+  // function handleClick() {
+  //   Swal.fire({
+  //     title: "Are you sure?",
+  //     text: "You will be clocked out of the system.",
+  //     icon: "warning",
+  //     buttons: ["Cancel", "Clock out"],
+  //     dangerMode: true,
+  //   }).then((willClockout) => {
+  //     if (willClockout) {
+  //       // do something when user confirms (e.g. clock out)
+  //     }
+  //   });
+  // }
+  // function handleTimeoutClick() {
+  //   swal({
+  //     title: "Are you sure?",
+  //     text: "You will be clocked out of the system.",
+  //     icon: "warning",
+  //     buttons: ["Cancel", "Clock out"],
+  //     dangerMode: true,
+  //   }).then((willClockout) => {
+  //     if (willClockout) {
+  //       // do something when user confirms (e.g. clock out)
+  //     }
+  //   });
+  // }
 
   const handleChange = (e) => {
     setAuth(e.target.checked);
@@ -228,7 +250,7 @@ export default function MenuAppBar() {
 
   return (
     <>
-    <div>  
+    <div className={styledash.bgcolor} >
       <NavbarAdmin />
       <Box height={70} />
       <Box sx={{display: "flex"}}>

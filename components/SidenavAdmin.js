@@ -43,7 +43,7 @@ const closedMixin = (theme) => ({
   },
 });
 
-const DrawerHeader = styled('div')(({ theme }) => ({
+const DrawerHeader = styled('div')(({ theme }) =>  ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
@@ -90,7 +90,7 @@ export default function Sidenav() {
       <CssBaseline /> 
       <Box height= {30} />
        <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
+        <DrawerHeader >
           <IconButton>
             {theme.direction === 'rtl' ? 
             <ChevronRightIcon /> : 

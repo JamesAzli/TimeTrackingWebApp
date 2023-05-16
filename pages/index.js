@@ -4,6 +4,7 @@ import AdminDash from "./Dashboard/AdminDash"
 import EmpReports from "./Login/EmpReports";
 import AdminReports from "./Dashboard/AdminReports"
 import AdminTimeInOut from "./Dashboard/AdminTimeInOut"
+import AdminRoles from "./Dashboard/AdminRoles"
 import stylerep from '../styles/Login/adminreports.module.scss'
 import stylehead from '../styles/Login/header.module.scss'
 
@@ -17,9 +18,10 @@ function HomePage() {
    {/* <Sidenav/> */}
    {/* <Navbar /> */}
    {/* <AdminTimeInOut/> */}
+   <AdminRoles/>
    {/* <Login /> */}
    {/* <EmpReports /> */}
-    <AdminReports/>
+    {/* <AdminReports/> */}
     {/* <AdminDash/> */}
    
     {/* </div> */}

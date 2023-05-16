@@ -2,7 +2,7 @@ import {create}  from "zustand";
 import {persist} from "zustand/middleware";
 
 let appStore = (set) => ({
-    dopen: true,
+    dopen: false,
     updateOpen:(dopen) => set((state) => ({dopen:dopen})),
 });
 
