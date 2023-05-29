@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -19,6 +20,12 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import LogoutIcon from '@mui/icons-material/Logout';
 import {useAppStore} from '../components/appStore'
 import Image from 'next/image';
+import Avatar from "@mui/material/Avatar";
+import 'firebase/auth';
+import {auth} from '../firebase';
+import {db} from '../firebase'
+
+
 
 const AppBar = styled(MuiAppBar, {
 })(({theme}) => ({
@@ -92,6 +99,33 @@ export default function Navbar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const [photoURL, setphotoURL] = useState(null);
+  const [displayName, setDisplayName] = useState(null);
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        setDisplayName(user.displayName);
+        setphotoURL(user.photoURL)
+      } else {
+        setDisplayName(null);
+        setphotoURL(null);
+      }
+    });
+  }, []);
+
+  const logout = () => {
+    localStorage.clear();
+    window.location.reload;
+    window.location.href = "/";
+  }
+
+  const EReports = () => {
+    setAnchorEl(null);
+    localStorage.clear()
+    window.location.reload
+    window.location.href = '../Login/EmpReports'
+  };
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu 
@@ -110,13 +144,13 @@ export default function Navbar() {
       onClose={handleMenuClose}
     >
 
-       <MenuItem onClick={handleMenuClose}  >
+       <MenuItem onClick={EReports}  >
           <ListItemIcon >
            <AssessmentIcon  fontSize="small" sx={{ color: '#852525' }} />
           </ListItemIcon>
           <ListItemText sx={{ color: '#852525' }} >Reports</ListItemText>
         </MenuItem>
-      <MenuItem onClick={handleMenuClose}  >
+      <MenuItem onClick={logout}  >
           <ListItemIcon >
             <LogoutIcon fontSize="small" sx={{ color: '#852525' }} />
           </ListItemIcon>
@@ -183,11 +217,21 @@ export default function Navbar() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle />
+                   <Avatar src={photoURL} alt="user profile" />
+                    <Typography
+                      variant="h6"
+                      component="div"
+                      sx={{ flexGrow: 1 }}
+                    >
+                      &emsp;
+                      {displayName}
+                    </Typography>
+              {/* <AccountCircle />
               <Typography variant="subtitle1" component="div" sx={{ flexGrow: 1 }}>
                 Gwen Kyle Gagasa
-                </Typography>
+                </Typography> */}
             </IconButton>
+           
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton

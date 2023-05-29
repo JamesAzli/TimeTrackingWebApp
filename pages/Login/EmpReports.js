@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import NavbarEmp from "../../components/NavbarEmp";
 import stylerep from '../../styles/Login/empreports.module.scss'
-import EmpSummList from "../Login/EmpSummList";
+import EmpSummList from "./EmpSummList";
 import Head from 'next/head';
 
 export default function EmpReports(){
@@ -15,7 +15,6 @@ export default function EmpReports(){
           Reports | GIANT
         </title>
       </Head>
-    <div className={stylerep.bgcolor}>  
       <NavbarEmp />
       <Box height={70} />
       <Box sx={{display: "flex"}}>
@@ -23,7 +22,6 @@ export default function EmpReports(){
           <EmpSummList />
         </Box>
       </Box>
-    </div>
     </>
 
   );

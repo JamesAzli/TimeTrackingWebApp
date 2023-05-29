@@ -1,5 +1,10 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { styled, alpha } from '@mui/material/styles';
+import Avatar from "@mui/material/Avatar";
+import 'firebase/auth';
+import {auth} from '../firebase';
+import {db} from '../firebase'
 import MuiAppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -93,6 +98,27 @@ export default function Navbar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const [photoURL, setphotoURL] = useState(null);
+  const [displayName, setDisplayName] = useState(null);
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        setDisplayName(user.displayName);
+        setphotoURL(user.photoURL)
+      } else {
+        setDisplayName(null);
+        setphotoURL(null);
+      }
+    });
+  }, []);
+
+  const logout = () => {
+    localStorage.clear();
+    window.location.reload;
+    window.location.href = "/";
+  }
+
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu 
@@ -114,7 +140,7 @@ export default function Navbar() {
           <ListItemIcon >
             <LogoutIcon fontSize="small" sx={{ color: '#852525' }} />
           </ListItemIcon>
-          <ListItemText sx={{ color: '#852525' }} >Logout</ListItemText>
+          <ListItemText sx={{ color: '#852525' }} onClick={logout}>Logout</ListItemText>
         </MenuItem>
     </Menu>
   );
@@ -153,7 +179,7 @@ export default function Navbar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed" elevation= "0" className={styles.AppBar} >
+      <AppBar position="fixed" className={styles.AppBar} elevation={8}>
         <Toolbar>
           <IconButton
             size="large"
@@ -184,12 +210,18 @@ export default function Navbar() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle />
-              <Typography variant="subtitle1" component="div" sx={{ flexGrow: 1 }}>
-                Gwen Kyle Gagasa
-                </Typography>
+              <Avatar src={photoURL} alt="user profile" />
+                    <Typography
+                      variant="h6"
+                      component="div"
+                      sx={{ flexGrow: 1 }}
+                    >
+                      &emsp;
+                      {displayName}
+                    </Typography>
             </IconButton>
           </Box>
+          
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"

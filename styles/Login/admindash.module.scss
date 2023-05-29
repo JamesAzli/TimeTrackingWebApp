@@ -1,6 +1,7 @@
 .gradient{
-    background: rgb(70, 68, 68);
-    background: linear-gradient(50deg, rgb(145, 17, 17) 0%, rgb(231, 226, 226)100%);
+    // background: rgb(70, 68, 68);
+    // background: linear-gradient(50deg, rgb(145, 17, 17) 0%, rgb(231, 226, 226)100%);
+    background-color: white;
 
 }
 .gradientlight{
@@ -10,7 +11,21 @@
 .iconstyle{
     margin-top: 20px;
     margin-left: 20px;
-    color:aliceblue;
+    color:red;
+}
+.text{
+    color:#852525;
+    font-size: 5rem;
+    font-family: 'LatoLight';
+}
+.align{
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+    margin-top: 5rem;
 }
 // .bgcolor{
 //     min-height: 100vh;

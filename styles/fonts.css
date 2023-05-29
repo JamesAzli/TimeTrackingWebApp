@@ -1,0 +1,34 @@
+@font-face {
+    font-family: 'Glacial';
+    src: url('./fonts/GlacialIndifferenceBold.otf');
+}
+
+@font-face {
+    font-family: 'LatoLight';
+    src: url('./fonts/Lato-Light.ttf');
+}
+
+@font-face {
+    font-family: 'LatoBold';
+    src: url('./fonts/Lato-Bold.ttf');
+}
+
+@font-face {
+    font-family: 'LatoBlack';
+    src: url('./fonts/Lato-Black.ttf');
+}
+
+@font-face {
+    font-family: 'LatoHairline';
+    src: url('./fonts/Lato-Hairline.ttf');
+}
+
+@font-face {
+    font-family: 'LatoRegular';
+    src: url('./fonts/Lato-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Komika';
+    src: url('./fonts/Komika.ttf');
+}

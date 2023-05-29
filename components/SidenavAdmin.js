@@ -18,7 +18,12 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
 import DashboardCustomizeOutlinedIcon from '@mui/icons-material/DashboardCustomizeOutlined';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import {useAppStore} from '../components/appStore'
+import { useRouter } from 'next/router';
+
+
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -70,6 +75,33 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export default function Sidenav() {
+
+  const router = useRouter();
+
+  const clock = () => {
+    localStorage.clear();
+    window.location.reload;
+    window.location.href = "../Dashboard/AdminTimeInOut";
+  }
+
+  const dash = () => {
+    localStorage.clear();
+    window.location.reload;
+    window.location.href = "../Dashboard/AdminDash";
+  }
+ 
+  const Areports = () => {
+    localStorage.clear();
+    window.location.reload;
+    window.location.href = "../Dashboard/AdminReports";
+  }
+
+  const EditRole = () => {
+    localStorage.clear();
+    window.location.reload;
+    window.location.href = "../Dashboard/EditRoles";
+  }
+
   const theme = useTheme();
   // const [open, setOpen] = React.useState(true);
   const open = useAppStore((state) => state.dopen);
@@ -104,11 +136,13 @@ export default function Sidenav() {
                 >
                   <DashboardCustomizeOutlinedIcon sx={{ color: '#852525' }} className={styles.fade}/>
                 </ListItemIcon>
-                <ListItemText primary="Dashboard" sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary="Dashboard" sx={{ opacity: open ? 1 : 0 }} onClick={clock}/>
                 <ArrowRightIcon/>
               </ListItemButton>
               <Divider />
             </ListItem>
+         
+
             <ListItem disablePadding sx={{ display: 'block' }} className={styles.fade}>
               <ListItemButton
                 sx={{
@@ -124,9 +158,9 @@ export default function Sidenav() {
                     justifyContent: 'center',
                   }}
                 >
-                  <WorkHistoryIcon sx={{ color: '#852525' }} className={styles.fade}/>
+                  <AssessmentIcon sx={{ color: '#852525' }} className={styles.fade}/>
                 </ListItemIcon>
-                <ListItemText primary="Time In / Time Out" sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary="Reports" sx={{ opacity: open ? 1 : 0 }} onClick={Areports} />
                 <ArrowRightIcon/>
               </ListItemButton>
               <Divider />
@@ -147,13 +181,37 @@ export default function Sidenav() {
                     justifyContent: 'center',
                   }}
                 >
-                  <AssessmentIcon sx={{ color: '#852525' }} className={styles.fade}/>
+                  <SupervisedUserCircleIcon sx={{ color: '#852525' }} className={styles.fade}/>
                 </ListItemIcon>
-                <ListItemText primary="Reports" sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary="Edit Role" sx={{ opacity: open ? 1 : 0 }} onClick={EditRole} />
                 <ArrowRightIcon/>
               </ListItemButton>
               <Divider />
             </ListItem>
+
+            <ListItem disablePadding sx={{ display: 'block' }} className={styles.fade}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <GroupsOutlinedIcon sx={{ color: '#852525' }} className={styles.fade}/>
+                </ListItemIcon>
+                <ListItemText primary="Employees" sx={{ opacity: open ? 1 : 0 }} onClick={dash} />
+                <ArrowRightIcon/>
+              </ListItemButton>
+              <Divider />
+            </ListItem>
+
         </List>
       </Drawer>
     </Box>

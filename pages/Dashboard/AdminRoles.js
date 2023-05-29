@@ -2,12 +2,12 @@ import React from "react";
 import SidenavAdmin from "../../components/SidenavAdmin";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import NavbarAdmin from "../../components/NavbarAdmin";
+import NavbarAdmin from "../../components/NavbarAdmin"
 import stylerep from '../../styles/Login/adminreports.module.scss'
-import SummList from "../Dashboard/SummList";
+import EditRoles from "../Dashboard/EditRoles";
 
 
-export default function AdminReports(){
+export default function AdminRoles(){
   return (
     <>
       <NavbarAdmin />
@@ -15,7 +15,7 @@ export default function AdminReports(){
       <Box sx={{display: "flex"}}>
         <SidenavAdmin />
         <Box component="main" sx={{ flexGrow:1, p:3}}>
-          <SummList />
+          <EditRoles />
         </Box>
       </Box>
      </>

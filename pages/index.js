@@ -5,7 +5,7 @@ import EmpReports from "./Login/EmpReports";
 import AdminReports from "./Dashboard/AdminReports"
 import stylerep from '../styles/Login/adminreports.module.scss'
 import stylehead from '../styles/Login/header.module.scss'
-import Navbar from "../components/Navbar"
+import Navbar from "../components/NavbarEmp"
 
 
 function HomePage() {
@@ -15,8 +15,9 @@ function HomePage() {
    {/* <div className={styles.background}>     */}
    {/* <Sidenav/> */}
    {/* <Navbar /> */}
-   {/* <Login /> */}
-   <EmpReports />
+
+   <Login />
+   {/* <EmpReports /> */}
     {/* <AdminReports/> */}
     {/* <AdminDash/> */}
    

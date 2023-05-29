@@ -2,16 +2,17 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import styles from "../styles/Login/dashboard.module.scss"
+import styles from "../../styles/Login/dashboard.module.scss";
 import { Button } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import 'firebase/auth';
-import {auth} from '../firebase';
-import {db} from '../firebase'
+import {auth} from '../../firebase';
+import {db} from '../../firebase'
 import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import cookie from "js-cookie";
-import Navbar from '../components/NavbarEmp'
+import NavbarAdmin from '../../components/NavbarAdmin';
+import SidenavAdmin from '../../components/SidenavAdmin';
 import Swal from "sweetalert2";
 
 export default function MenuAppBar() {
@@ -21,9 +22,9 @@ export default function MenuAppBar() {
   const [longitude, setLongitude] = useState(null);
   const [place, setPlace] = useState(null);
   const [photoURL, setphotoURL] = useState(null);
-  const [documentId, setDocumentId] = useState();
-  const [timeIn, setTimeIn] = useState();
-  const [timeOut, setTimeOut] = useState();
+  const [documentId, setDocumentId] = useState(null);
+  const [timeIn, setTimeIn] = useState(null);
+  const [timeOut, setTimeOut] = useState(null);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -92,7 +93,7 @@ export default function MenuAppBar() {
         setTimeIn(timeString);
       } catch (err) {
         console.error(err);
-        setTimeIn(fetchTimeIn, 5000); // retry after 5 secondsf
+        setTimeIn(fetchTimeIn, 5000); // retry after 5 seconds
       }
     };
     fetchTimeIn();
@@ -124,7 +125,7 @@ export default function MenuAppBar() {
   const date = new Date();
   const showDatePage = date.toDateString();
   const [showTime, setShowTime] = useState('');
-  
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       const date = new Date();
@@ -150,6 +151,7 @@ export default function MenuAppBar() {
     day: "2-digit",
     year: "numeric",
   });
+
 
   const handleClick = async () => {
     const locationPermission = await navigator.permissions.query({ name: 'geolocation' });
@@ -179,36 +181,35 @@ export default function MenuAppBar() {
       });
       setDateString(showTime);
 
-   //Minutes Late
-   const expectedTimeIn = new Date();
-   expectedTimeIn.setHours(7, 15, 0); // Set expected time-in to 7:15 PM
-   const actualTimeIn = new Date();
-   const timeDifference = actualTimeIn - expectedTimeIn; // Difference in milliseconds
+  //Minutes Late
+  const expectedTimeIn = new Date();
+  expectedTimeIn.setHours(7, 15, 0); // Set expected time-in to 7:15 PM
+  const actualTimeIn = new Date();
+  const timeDifference = actualTimeIn - expectedTimeIn; // Difference in milliseconds
 
-   const totalMinutesLate = Math.floor(timeDifference / (1000 * 60)); // Calculate total minutes of lateness
-   const hoursLate = Math.floor(totalMinutesLate / 60); // Calculate hours of lateness
-   const minutesLate = totalMinutesLate % 60; // Calculate minutes of lateness
+  const totalMinutesLate = Math.floor(timeDifference / (1000 * 60)); // Calculate total minutes of lateness
+  const hoursLate = Math.floor(totalMinutesLate / 60); // Calculate hours of lateness
+  const minutesLate = totalMinutesLate % 60; // Calculate minutes of lateness
 
-     try {
-       const docRef = await addDoc(collection(db, "Reports-Admin"), {
-         timein: timeIn,
-         name: displayName,
-         location: place,
-         date: showDate,
-         lateMinutes: `${hoursLate} hours ${minutesLate} minutes`,
-         // uid: documentId
-       });
-       
-       console.log("New document created with ID: ", docRef.id);
-       setDocumentId(docRef.id);
-       cookie.set("documentId", docRef.id, { expires: 1 });
-       
-     }catch (error) {
-     console.error("Error adding document: ", error);
-   }
-   }
+    try {
+      const docRef = await addDoc(collection(db, "Reports-Admin"), {
+        timein: timeIn,
+        name: displayName,
+        location: place,
+        date: showDate,
+        lateMinutes: `${hoursLate} hours ${minutesLate} minutes`,
+        // uid: documentId
+      });
+      
+      console.log("New document created with ID: ", docRef.id);
+      setDocumentId(docRef.id);
+      cookie.set("documentId", docRef.id, { expires: 1 });
+      
+    }catch (error) {
+    console.error("Error adding document: ", error);
+  }
+  }
 }
-
 const handleTimeoutClick = async () => {
   if (!documentId) {
     // User has not timed in yet
@@ -282,16 +283,21 @@ const handleTimeoutClick = async () => {
   }
 
   return (
-    <>
-      <Box sx={{ flexGrow: 1 }}>
-        <Navbar/>
-        <div className={styles.top}>
+    <>  
+      <NavbarAdmin />
+      <Box height={70} />
+      <Box sx={{display: "flex"}}>
+        <SidenavAdmin />
+        <Box component="main" sx={{ flexGrow:1, p:3}}>
+
+        <div>
           <Typography
             className={styles.goodday}
             component="div"
             sx={{ flexGrow: 1 }}
           >
-            Good Day! {displayName}
+            {/* <br/> */}
+            Good Day {displayName}
           </Typography>
           <div>
             <div className={styles.time}>{showTime}</div>
@@ -299,16 +305,16 @@ const handleTimeoutClick = async () => {
           </div>
         </div>
         <div className={styles.date}>{showDatePage}</div>
-      </Box>
+      
 
       <div className={styles.dbutton}>
         <Button onClick={handleClick} className={styles.tibutton}>
           Clock-In
         </Button>
-        <Button onClick={handleTimeoutClick}  className={styles.button}>
+        <Button onClick={handleTimeoutClick}  className={styles.tibutton}>
           Clock-Out
         </Button>
-        {/* {dateString && <p>TimeIn Recorder at: {dateString}</p>} */}
+        {/* {dateString && <p>Time-In Recorded at: {dateString}</p>} */}
         <ToastContainer
           position="top-center"
           autoClose={2000}
@@ -321,8 +327,9 @@ const handleTimeoutClick = async () => {
           pauseOnHover
           theme="light"
         />
-      </div>
-
+         </div>
+        </Box>
+      </Box>
     </>
   );
 }

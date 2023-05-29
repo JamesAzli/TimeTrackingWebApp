@@ -1,19 +1,21 @@
 .bgcolor{
     min-height: 100vh;
-    background: linear-gradient(to top, #852525, #aa596c, #c190ab, #d9c9dc, #ffffff);
+    // background: linear-gradient(to top, #852525, #aa596c, #c190ab, #d9c9dc, #ffffff);
 }
 .searchmargin{
     border-radius: .5rem;
 }
 .listmargin{
     margin-left: 1rem;
+    padding: .3rem;
     text-transform: capitalize !important;
-    color: #FFFF;
-    background-color: #852525;
+    color: #852525;
+    border-color:#852525;
+    background-color: #ffffff;
     &:hover {
         color:#852525;
         background-color: #eccccc;
-        border-color: #852525;
+        border-color: #ffffff;
     }
 }
 .tablehead{
