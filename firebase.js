@@ -8,13 +8,13 @@ import {getAuth,GoogleAuthProvider} from 'firebase/auth'
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCzUvKtGTSyVJRDDX6tJkwaC78ccQEq-F8",
-  authDomain: "time-tracking-web-app-e1eee.firebaseapp.com",
-  projectId: "time-tracking-web-app-e1eee",
-  storageBucket: "time-tracking-web-app-e1eee.appspot.com",
-  messagingSenderId: "656226707346",
-  appId: "1:656226707346:web:fc6344bca9ec112b7c034b",
-  measurementId: "G-WEPBM430ZT"
+  apiKey: "AIzaSyBHP_Jbu5Gh7VegXT55sVihr89GsGtZQ_A",
+  authDomain: "time-tracking-web-app-v2.firebaseapp.com",
+  databaseURL: "https://time-tracking-web-app-v2-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "time-tracking-web-app-v2",
+  storageBucket: "time-tracking-web-app-v2.appspot.com",
+  messagingSenderId: "537794490465",
+  appId: "1:537794490465:web:61170f768477d70ce53a20"
 };
 
 // // // Initialize Firebase

@@ -22,7 +22,7 @@ import {auth,provider} from '../../firebase'
 import {db} from '../../firebase'
 import {signInWithPopup} from 'firebase/auth'; 
 import { useRouter } from 'next/router';
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, setDoc,getDoc, doc } from "firebase/firestore";
 // import Home from "../Home"
 
 function LoginT(){
@@ -39,30 +39,47 @@ function LoginT(){
     const router = useRouter();
 
     const handleClick = async () => {
-    
-      const result = await signInWithPopup(auth, provider)
+      const result = await signInWithPopup(auth, provider);
       const user = result.user;
       const uid = user.uid;
       const email = user.email;
       const name = user.displayName;
-      const role = user.role
-
-
-      // Add the user to the 'users' collection in Firestore
-      await addDoc(collection(db, "Client-Login"), {
-        uid: user.uid,
-        displayName: user.displayName,
-        email: user.email,
-        role: "Employee"
-      });
-
-        // Route to Admin Dashboard or Home based on user's role
+      let role = "";
+    
       if (user.role == "Admin") {
-        router.push('/Dashboard/superAdminReps');
-    } else {
-        router.push('/Home');
-    } 
-  };
+        role = "Admin";
+      } else {
+        role = "Employee";
+      }
+    
+      const userRef = doc(db, 'Client-Login', uid);
+      const docSnap = await getDoc(userRef);
+    
+      if (docSnap.exists()) {
+        const role = docSnap.get("role");
+        if (role === "Admin") {
+          router.push('/Login/superAdminReps');
+        } else {
+          router.push('/Home');
+        } 
+      } else {
+        // Add the user to the 'users' collection in Firestore
+        await setDoc(doc(db, "Client-Login", uid), {
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email,
+          role: role
+        });
+        
+        if (user.role === "Admin") {
+          router.push('/Login/superAdminReps');
+        } else {
+          router.push('/Home');
+        } 
+        // Route to Admin Dashboard or Home based on user's role
+        
+      }
+    };
     
     
     return (

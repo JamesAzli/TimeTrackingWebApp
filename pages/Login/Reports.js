@@ -102,6 +102,7 @@ function Reports() {
             <th>Location</th>
             <th>Time-in</th>
             <th>Time-out</th>
+            <th>Minutes Late</th>
             <th>Date</th>
           </tr>
         </thead>
@@ -112,6 +113,7 @@ function Reports() {
               <td>{report.location}</td>
               <td>{report.timein}</td>
               <td>{report.timeout}</td>
+              <td>{report.lateMinutes}</td>
               <td>{report.date}</td>
             </tr>
           ))}

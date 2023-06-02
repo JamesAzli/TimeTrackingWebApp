@@ -2,7 +2,7 @@ import React from 'react'
 import {db} from "../../firebase"
 import {auth} from "../../firebase"
 import firebase from "firebase/app";
-import { collection, getDocs, query, where, collectionGroup } from "firebase/firestore";
+import { collection, getDocs, query, where, collectionGroup, orderBy } from "firebase/firestore";
 import {getAuth,onAuthStateChanged} from "firebase/auth";
 import { useState,useEffect } from 'react'
 
@@ -33,7 +33,7 @@ function sampleReport() {
     const fetchReports = async () => {
       const colRef = collection(db, 'Reports-Admin')
       const name = displayName
-      const q = query(colRef, where("name", "==", name));
+      const q = query(colRef, where("name", "==", name), orderBy("date", "desc"));
       const querySnapshot = await getDocs(q);
       const reportsData = querySnapshot.docs.map((doc) =>({
         id: doc.id,
@@ -58,6 +58,7 @@ function sampleReport() {
           <th>Location</th>
           <th>Time In</th>
           <th>Time Out</th>
+          <th>Minutes Late</th>
           <th>Date</th>
           <th>Time Rendered</th>
         </tr>
@@ -69,6 +70,7 @@ function sampleReport() {
             <td>{report.location}</td>
             <td>{report.timein}</td>
             <td>{report.timeout}</td>
+            <td>{report.lateMinutes}</td>
             <td>{report.date}</td>
             <td>{report.timeOut - report.timeIn}</td>
           </tr>

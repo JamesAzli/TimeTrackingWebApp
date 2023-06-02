@@ -1,29 +1,3 @@
-// import React, { useState, useEffect } from 'react';
-
-// import {place} from './Login/Login'
-
-
-
-// function Home(){
-  
-//     const logout =()=>{
-//         
-//     }
-
-//     
-
-
-  
-//     return (
-//       <div>
-//          <p>Welcome, {displayName}!</p>
-//          {/* {place && <p>Current Location: {place}</p>} */}
-//          <button onClick={logout}>Logout</button>
-//       </div>
-//     );
-// }
-
-// export default Home;
 import * as React from "react";
 import { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
@@ -49,6 +23,8 @@ import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import Avatar from "@mui/material/Avatar";
 import cookie from "js-cookie";
 import axios from 'axios';
+import Swal from 'sweetalert2'
+
 // import moment from "moment-timezone"
 
 export default function MenuAppBar() {
@@ -63,6 +39,7 @@ export default function MenuAppBar() {
   const [timeIn, setTimeIn] = useState(null);
   const [timeOut, setTimeOut] = useState(null);
   const [TR1, setTimeRendered1] = useState();
+  const [showTime, setShowTime] = useState('');
 
   // useEffect(() => {
   //   if (timeIn && timeOut) {
@@ -81,7 +58,7 @@ export default function MenuAppBar() {
       },
       (error) => {
         // setErrorMessage("Location access is not enabled")
-        alert('"Location access is not enabled"')
+        // alert('"Location access is not enabled"')
         console.error(error);
       }
     );
@@ -171,10 +148,23 @@ export default function MenuAppBar() {
 
   const date = new Date();
   const showDatePage = date.toDateString();
-  const showTime = date.toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const date = new Date();
+      const formattedTime = date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+      setShowTime(formattedTime);
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalId); // Clean up the interval when the component unmounts
+    };
+  }, []);
 
   const timestamp = new Date().getTime(); // current timestamp
   const date2 = new Date(timestamp);
@@ -187,67 +177,86 @@ export default function MenuAppBar() {
   const [dateString, setDateString] = useState("");
 
   const handleClick = async () => {
-    // const response = await fetch("http://worldtimeapi.org/api/timezone/Asia/Manila/");
-    // const data = await response.json();
-    // const dateTime = new Date(data.dateTime);
-    // const timeString = dateTime.toLocaleTimeString([], {
-    //   hour: "2-digit",
-    //   minute: "2-digit",
-    //   hour12: true,
-    // });
-    // setTimeIn(timeString);
-
-    // const date = new Date();
-    // const showDate = date.toDateString();
-    // const showTime = date.toLocaleTimeString([], {
-    //   hour: "2-digit",
-    //   minute: "2-digit",
-    // });
-    toast.success("TimeIn Recorded!", {
-      position: "top-center",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-    setDateString(showTime);
-    try {
-      const docRef = await addDoc(collection(db, "Reports-Admin"), {
-        timein: timeIn,
-        name: displayName,
-        location: place,
-        date: showDate,
+    const locationPermission = await navigator.permissions.query({ name: 'geolocation' });
+    if (locationPermission.state === 'denied') {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Oops...',
+        text: 'Please enable your location',
+      })
+    } else if (documentId) {
+      // User has already timed in without timing out
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'You have already timed in. Please time out first before timing in again.',
       });
-      
-      console.log("New document created with ID: ", docRef.id);
-      setDocumentId(docRef.id);
-      cookie.set("documentId", docRef.id, { expires: 1 });
-    }catch (error) {
-    console.error("Error adding document: ", error);
-  }
+    } else {
+      toast.success("TimeIn Recorded!", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setDateString(showTime);
+
+      //Minutes Late
+    const expectedTimeIn = new Date();
+    expectedTimeIn.setHours(7, 15, 0); // Set expected time-in to 7:15 PM
+    const actualTimeIn = new Date();
+    const timeDifference = actualTimeIn - expectedTimeIn; // Difference in milliseconds
+
+    const totalMinutesLate = Math.floor(timeDifference / (1000 * 60)); // Calculate total minutes of lateness
+    const hoursLate = Math.floor(totalMinutesLate / 60); // Calculate hours of lateness
+    const minutesLate = totalMinutesLate % 60; // Calculate minutes of lateness
+
+      try {
+        const docRef = await addDoc(collection(db, "Reports-Admin"), {
+          timein: timeIn,
+          name: displayName,
+          location: place,
+          date: showDate,
+          lateMinutes: `${hoursLate} hours ${minutesLate} minutes`,
+          // uid: documentId
+        });
+        
+        console.log("New document created with ID: ", docRef.id);
+        setDocumentId(docRef.id);
+        cookie.set("documentId", docRef.id, { expires: 1 });
+        
+      }catch (error) {
+      console.error("Error adding document: ", error);
+    }
+    }
+    
 }
 const handleTimeoutClick = async () => {
-  // const response = await fetch("http://worldtimeapi.org/api/timezone/Asia/Manila/");
-  //   const data = await response.json();
-  //   const dateTime = new Date(data.dateTime);
-  //   const timeString = dateTime.toLocaleTimeString([], {
-  //     hour: "2-digit",
-  //     minute: "2-digit",
-  //     hour12: true,
-  //   });
-  //   setTimeOut(timeString);
-  
-  // const date = new Date();
-  // const showDate = date.toDateString();
-  // const showTime = date.toLocaleTimeString([], {
-  //   hour: "2-digit",
-  //   minute: "2-digit",
-  // });
-
-  const documentRef = doc(db, "Reports-Admin", documentId);
+  if (!documentId) {
+    // User has not timed in yet
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'You have not timed in yet. Please time in before timing out.',
+    });
+    return;
+  }
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to revert this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Confirm Clock-Out',
+    cancelButtonText: 'No, cancel',
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#852525',
+    reverseButtons: true
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      const documentRef = doc(db, "Reports-Admin",documentId);
     await updateDoc(documentRef, {
       timeout: timeOut,
     });
@@ -264,6 +273,16 @@ const handleTimeoutClick = async () => {
       progress: undefined,
       theme: "light",
     });
+    } else if (
+      result.dismiss === Swal.DismissReason.cancel
+    ) {
+      Swal.fire(
+        'Cancelled',
+        'Time out not recorded',
+        'error'
+      )
+    }
+  })  
 };
 
 
