@@ -53,14 +53,6 @@ import { FormControl, InputLabel, Select } from "@mui/material";
 import { FaCalendarAlt } from 'react-icons/fa';
 import { DateRangePicker } from 'rsuite';
 
-
-// async function fetchDocuments(setDocuments) {
-//   const querySnapshot = await getDocs(collection(db, "Client-Login"));
-//   const documents = querySnapshot.docs.map((doc) => doc.data());
-//   const uniqueDocuments = Array.from(new Map(documents.map((doc) => [doc.uid, doc])).values());
-//   setDocuments(uniqueDocuments);
-// }
-
 const fetchDocuments = async (callback) => {
   // Fetch your documents here
   const data = await getDocs(collection(db, "Client-Login"));
@@ -80,9 +72,7 @@ export default function SummList() {
   const [selectedRole, setSelectedRole] = useState("")
   const [startDate, setStartDate] = useState(new Date());
 
-  
-
-  useEffect(()=>{
+  useEffect(() => {
     fetchDocuments(setDocuments);
   }, [])
 
@@ -98,19 +88,18 @@ export default function SummList() {
   };
 
   useEffect(() => {
+    const getReports = async () => {
+      const data = await getDocs(Ereports);
+      setRows(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
     getReports();
-  }, []);
+  }, [Ereports]);
 
   const router = useRouter();
 
   function handleBack() {
     router.push("../Dashboard/AdminDash"); // Navigate back to the previous page
   }
-
-  const getReports = async () => {
-    const data = await getDocs(Ereports);
-    setRows(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

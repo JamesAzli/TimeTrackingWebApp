@@ -34,20 +34,14 @@ import {
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { db } from "../../firebase";
-// import { collection, getDocs } from "firebase/firestore";
 
 export default function SummList() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rows, setRows] = useState([]);
   const router = useRouter();
-  const Ereports = collection(db,'Reports-Admin')
   const [reports, setReports] = useState([]);
   const [displayName, setDisplayName] = useState("");
-  
-  useEffect(()=>{
-    getReports();
-  },[])
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -59,46 +53,33 @@ export default function SummList() {
     });
   }, []);
 
-
   useEffect(() => {
     const fetchReports = async () => {
       const colRef = collection(db, 'Reports-Admin')
       const name = displayName
       const q = query(colRef, where("name", "==", name), orderBy("date", "desc"));
       const querySnapshot = await getDocs(q);
-      const reportsData = querySnapshot.docs.map((doc) =>({
+      const reportsData = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data()
       }));
       setReports(reportsData);
-     
     };
+
     fetchReports();
   }, [displayName]);
 
+  useEffect(() => {
+    const getReports = async () => {
+      const data = await getDocs(collection(db, 'Reports-Admin'));
+      setRows(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    }
 
-  // useEffect(() => {
-  //   const fetchReports = async () => {
-  //     const colRef = collection(db, "Reports-Admin");
-  //     const name = displayName;
-  //     const q = query(colRef, where("name", "==", name));
-  //     const querySnapshot = await getDocs(q);
-  //     const reportsData = querySnapshot.docs.map((doc) => ({
-  //       id: doc.id,
-  //       ...doc.data(),
-  //     }));
-  //     setReports(reportsData);
-  //   };
-  //   fetchReports();
-  // }, [displayName]);
+    getReports();
+  }, []);
 
   function handleBack() {
     router.push("/Home"); // Navigate back to the previous page
-  }
-
-  const getReports = async () => {
-    const data = await getDocs(Ereports);
-    setRows(data.docs.map((doc)=> ({...doc.data(), id: doc.id})))
   }
 
   const handleChangePage = (event, newPage) => {
@@ -109,35 +90,6 @@ export default function SummList() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-
-  const confirmation = () => {
-    Swal.fire({
-      title: "Successfully Collected",
-      text: "Your file is ready to download!",
-      icon: "success",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Download",
-    });
-  };
-
-  const [totalHours, setTotalHours] = useState(0);
-
-  useEffect(() => {
-    reports.forEach(async (report) => {
-      if (report.timein && report.timeout) {
-        const inTime = moment(report.timein, "HH:mm");
-        const outTime = moment(report.timeout, "HH:mm");
-        const hoursDiff = moment.duration(outTime.diff(inTime)).asHours();
-
-        const reportRef = doc(db, "Reports-Admin", report.id);
-        await updateDoc(reportRef, {
-          timeRendered: hoursDiff,
-        });
-      }
-    });
-  }, [reports]);
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }} elevation={8}>
@@ -153,15 +105,6 @@ export default function SummList() {
       <Divider />
       <Box height={10} />
       <Stack direction="row" spacing={2}>
-        {/* <Autocomplete
-             disablePortal
-             id="combo-box-demo"
-             options={rows}
-             sx={{width: 300}}
-            //  onChange={(e,v)} => filterData(v)}
-             getOptionlabel={(rows)} => rows.date || ""}
-             renderInput={(params)} => ( */}
-
         <Button
           sx={{ "& .MuiSvgIcon-root": { fontSize: 16 } }}
           size="small"
@@ -177,7 +120,6 @@ export default function SummList() {
           component="div"
           sx={{ flexGrow: 16 }}
         ></Typography>
-
         <Typography
           variant="h6"
           component="div"
@@ -217,10 +159,8 @@ export default function SummList() {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1}>
-                    <TableCell key={row.id} align={"left"}>
-                      {row.name}
-                    </TableCell>
+                  <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
+                    <TableCell align={"left"}>{row.name}</TableCell>
                     <TableCell align={"left"}>{row.location}</TableCell>
                     <TableCell align={"left"}>{row.timein}</TableCell>
                     <TableCell align={"left"}>{row.timeout}</TableCell>
@@ -228,12 +168,12 @@ export default function SummList() {
                     <TableCell>
                       {row.timein && row.timeout
                         ? moment
-                            .utc(
-                              moment(row.timeout, "HH:mm").diff(
-                                moment(row.timein, "HH:mm")
-                              )
+                          .utc(
+                            moment(row.timeout, "HH:mm").diff(
+                              moment(row.timein, "HH:mm")
                             )
-                            .format("HH:mm")
+                          )
+                          .format("HH:mm")
                         : "00:00"}
                     </TableCell>
                     <TableCell align={"left"}>{row.date}</TableCell>

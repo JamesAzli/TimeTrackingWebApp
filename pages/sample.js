@@ -3,7 +3,7 @@ import {auth,provider} from '.././firebase.js';
 import {signInWithPopup} from 'firebase/auth'; 
 import Home from "./Home";
 
-function sample() {
+function Sample() {
 
     const [value,setValue] = useState('')
     const handleClick =()=>{
@@ -13,9 +13,9 @@ function sample() {
         })
     }
 
-    useEffect(()=>{
-        setValue(localStorage.getItem('email'))
-    })
+    useEffect(() => {
+      setValue(localStorage.getItem('email'));
+  }, []);
 
   return (
     <div>
@@ -26,4 +26,4 @@ function sample() {
   )
 }
 
-export default sample
+export default Sample

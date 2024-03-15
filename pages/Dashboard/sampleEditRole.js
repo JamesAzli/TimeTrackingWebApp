@@ -17,7 +17,7 @@ async function fetchDocuments(setDocuments) {
   setDocuments(uniqueDocuments);
 }
 
-function superAdminReps() {
+function SuperAdminReps() {
   const [documents, setDocuments] = useState([]);
   const [selectedRoles, setSelectedRoles] = useState({});
 
@@ -73,4 +73,4 @@ function superAdminReps() {
   )
 }
 
-export default superAdminReps;
+export default SuperAdminReps;

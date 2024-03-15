@@ -5,7 +5,7 @@ import firebase from "firebase/app";
 import {getAuth,onAuthStateChanged} from "firebase/auth";
 import { useState,useEffect } from 'react'
 
-function sampleReport() {
+function SampleReport() {
 
     const [reports, setReports] = useState([]);
     const [uid, setUid] = useState(null);
@@ -17,7 +17,7 @@ function sampleReport() {
         return () => {
           unsubscribe();
         };
-      }, [auth]);
+      }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -62,4 +62,4 @@ function sampleReport() {
   )
 }
 
-export default sampleReport
+export default SampleReport
