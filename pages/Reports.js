@@ -24,8 +24,8 @@ function Reports() {
           <tr>
             <th>Name</th>
             <th>Location</th>
-            <th>Time-in</th>
-            <th>Time-out</th>
+            <th>Time-In</th>
+            <th>Time-Out</th>
             <th>Date</th>
           </tr>
         </thead>

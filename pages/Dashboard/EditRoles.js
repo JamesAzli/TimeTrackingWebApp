@@ -45,6 +45,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import NavbarAdmin from "../../components/NavbarAdmin";
 import SidenavAdmin from "../../components/SidenavAdmin";
 
+
 async function fetchDocuments(setDocuments) {
   const querySnapshot = await getDocs(collection(db, "Client-Login"));
   const documents = querySnapshot.docs.map((doc) => doc.data());
@@ -138,16 +139,16 @@ export default function EditRoles() {
             <TableHead>
               <TableRow>
                 <TableCell align={"left"} style={{ minWidth: "150px" }}>
-                  Name
+                  <b>Name</b>
                 </TableCell>
                 <TableCell align={"left"} style={{ minWidth: "150px" }}>
-                  Email
+                <b>Email</b>
                 </TableCell>
                 <TableCell align={"left"} style={{ minWidth: "150px" }}>
-                  Role
+                <b>Role</b>
                 </TableCell>
                 <TableCell align={"left"} style={{ minWidth: "150px" }}>
-                  Edit Role
+                <b>Edit Role</b>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -175,8 +176,12 @@ export default function EditRoles() {
                           <option value="">Select Role</option>
                           <option value="Employee">Employee</option>
                           <option value="Admin">Admin</option>
+                          <option value="Manager">Manager</option>
+                          <option value="Team Lead">Team Lead</option>
                         </select>
-                        <button onClick={() => handleEditRole(row.uid)}>
+                        <button onClick={() => handleEditRole(row.uid)}
+                        style={{ marginLeft: '10px' }}
+                        >
                           Edit Role
                         </button>
                       </TableCell>

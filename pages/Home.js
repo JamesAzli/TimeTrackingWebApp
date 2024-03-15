@@ -13,6 +13,7 @@ import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import cookie from "js-cookie";
 import Navbar from '../components/NavbarEmp'
 import Swal from "sweetalert2";
+import { Note } from "@mui/icons-material";
 
 export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -24,37 +25,32 @@ export default function MenuAppBar() {
   const [documentId, setDocumentId] = useState();
   const [timeIn, setTimeIn] = useState();
   const [timeOut, setTimeOut] = useState();
+  const [setComment, comments] = useState();
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLatitude(position.coords.latitude);
-        setLongitude(position.coords.longitude);
-      },
-      (error) => {
-        // setErrorMessage("Location access is not enabled")
-        alert('"Location access is not enabled"')
+    const fetchLocation = async () => {
+      try {
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+        const { latitude, longitude } = position.coords;
+        
+        const url = `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=cada18a586924614b6d60d9ac25c1945`;
+        const response = await fetch(url);
+        const data = await response.json();
+        const address = data.results[0].formatted;
+        
+        setLatitude(latitude);
+        setLongitude(longitude);
+        setPlace(address);
+      } catch (error) {
+        alert('Location access is not enabled');
         console.error(error);
       }
-    );
-  }, []);
-
-  useEffect(() => {
-    const fetchAddress = async () => {
-      if (latitude && longitude) {
-        const url = `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=cada18a586924614b6d60d9ac25c1945`;
-        try {
-          const response = await fetch(url);
-          const data = await response.json();
-          const address = data.results[0].formatted;
-          setPlace(address);
-        } catch (error) {
-          console.error(error);
-        }
-      }
     };
-    fetchAddress();
-  }, [latitude, longitude]);
+  
+    fetchLocation();
+  }, []);
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -153,61 +149,97 @@ export default function MenuAppBar() {
 
   const handleClick = async () => {
     const locationPermission = await navigator.permissions.query({ name: 'geolocation' });
+  
     if (locationPermission.state === 'denied') {
       Swal.fire({
         icon: 'warning',
         title: 'Oops...',
         text: 'Please enable your location',
-      })
+      });
     } else if (documentId) {
-      // User has already timed in without timing out
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
         text: 'You have already timed in. Please time out first before timing in again.',
       });
     } else {
-      toast.success("Clock-In Recorded!", {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
+      Swal.fire({
+        title: 'Add Note',
+        input: 'text',
+        inputLabel: 'Note',
+        inputPlaceholder: 'Enter a note (optional)',
+        showCancelButton: true,
+        confirmButtonText: 'Time In',
+        showLoaderOnConfirm: true,
+        preConfirm: async (note) => {
+          toast.success("TimeIn Recorded!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          // Perform the time-in action and save the note to the database
+          const timePeriods = [
+            { name: 'Morning', start: { hours: 7, minutes: 15 } },
+            { name: 'Afternoon', start: { hours: 12, minutes: 15 } },
+            { name: 'Evening', start: { hours: 22, minutes: 15 } },
+            { name: 'Night', start: { hours: 3, minutes: 15 } },
+          ];
+  
+          const actualTimeIn = new Date();
+  
+          let leastMinutesLate = Infinity;
+          let timePeriodForLateness = null;
+          let hoursLate = 0;
+          let minutesLate = 0;
+  
+          timePeriods.forEach((timePeriod) => {
+            const expectedTimeIn = new Date();
+            expectedTimeIn.setHours(timePeriod.start.hours, timePeriod.start.minutes, 0);
+            const timeDifference = Math.abs(actualTimeIn.getTime() - expectedTimeIn.getTime());
+  
+            if (timeDifference > 0 && timeDifference < leastMinutesLate) {
+              leastMinutesLate = timeDifference;
+              timePeriodForLateness = timePeriod;
+              const totalMinutesLate = Math.floor(leastMinutesLate / (1000 * 60));
+              hoursLate = Math.floor(totalMinutesLate / 60);
+              minutesLate = totalMinutesLate % 60;
+            }
+          });
+  
+          if (leastMinutesLate !== Infinity) {
+            console.log(`Lateness for ${timePeriodForLateness.name}`);
+            console.log(`Hours late: ${hoursLate}`);
+            console.log(`Minutes late: ${minutesLate}`);
+          } else {
+            console.log('No lateness recorded');
+          }
+  
+          // Save the note to the database
+          try {
+            const docRef = await addDoc(collection(db, 'Reports-Admin'), {
+              timein: timeIn,
+              name: displayName,
+              location: place,
+              date: showDate,
+              lateMinutes: leastMinutesLate !== Infinity ? `${hoursLate} hours ${minutesLate} minutes` : '',
+              remarks: note || '',
+            });
+  
+            console.log('New document created with ID: ', docRef.id);
+            setDocumentId(docRef.id);
+            cookie.set('documentId', docRef.id, { expires: 1 });
+          } catch (error) {
+            console.error('Error adding document: ', error);
+          }
+        },
       });
-      setDateString(showTime);
-
-   //Minutes Late
-   const expectedTimeIn = new Date();
-   expectedTimeIn.setHours(7, 15, 0); // Set expected time-in to 7:15 PM
-   const actualTimeIn = new Date();
-   const timeDifference = actualTimeIn - expectedTimeIn; // Difference in milliseconds
-
-   const totalMinutesLate = Math.floor(timeDifference / (1000 * 60)); // Calculate total minutes of lateness
-   const hoursLate = Math.floor(totalMinutesLate / 60); // Calculate hours of lateness
-   const minutesLate = totalMinutesLate % 60; // Calculate minutes of lateness
-
-     try {
-       const docRef = await addDoc(collection(db, "Reports-Admin"), {
-         timein: timeIn,
-         name: displayName,
-         location: place,
-         date: showDate,
-         lateMinutes: `${hoursLate} hours ${minutesLate} minutes`,
-         // uid: documentId
-       });
-       
-       console.log("New document created with ID: ", docRef.id);
-       setDocumentId(docRef.id);
-       cookie.set("documentId", docRef.id, { expires: 1 });
-       
-     }catch (error) {
-     console.error("Error adding document: ", error);
-   }
-   }
-}
+    }
+  };
 
 const handleTimeoutClick = async () => {
   if (!documentId) {
@@ -305,7 +337,7 @@ const handleTimeoutClick = async () => {
         <Button onClick={handleClick} className={styles.tibutton}>
           Clock-In
         </Button>
-        <Button onClick={handleTimeoutClick}  className={styles.button}>
+        <Button onClick={handleTimeoutClick}  className={styles.tibutton}>
           Clock-Out
         </Button>
         {/* {dateString && <p>TimeIn Recorder at: {dateString}</p>} */}

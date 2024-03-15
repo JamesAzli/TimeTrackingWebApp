@@ -41,13 +41,13 @@ export default function SummList() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rows, setRows] = useState([]);
   const router = useRouter();
-  // const Ereports = collection(db,'Reports-Admin')
+  const Ereports = collection(db,'Reports-Admin')
   const [reports, setReports] = useState([]);
   const [displayName, setDisplayName] = useState("");
-
-  // useEffect(()=>{
-  //   getReports();
-  // },[])
+  
+  useEffect(()=>{
+    getReports();
+  },[])
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -96,10 +96,10 @@ export default function SummList() {
     router.push("/Home"); // Navigate back to the previous page
   }
 
-  // const getReports = async () => {
-  //   const data = await getDocs(Ereports);
-  //   setRows(data.docs.map((doc)=> ({...doc.data(), id: doc.id})))
-  // }
+  const getReports = async () => {
+    const data = await getDocs(Ereports);
+    setRows(data.docs.map((doc)=> ({...doc.data(), id: doc.id})))
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -190,25 +190,25 @@ export default function SummList() {
           <TableHead>
             <TableRow>
               <TableCell align={"left"} style={{ minWidth: "150px" }}>
-                Name
+                <b>Name</b>
               </TableCell>
               <TableCell align={"left"} style={{ minWidth: "100px" }}>
-                Geo Location
+                <b>Geo Location</b>
               </TableCell>
               <TableCell align={"left"} style={{ minWidth: "80px" }}>
-                Time-In
+                <b>Time-In</b>
               </TableCell>
               <TableCell align={"left"} style={{ minWidth: "80px" }}>
-                Time-Out
+                <b>Time-Out</b>
               </TableCell>
               <TableCell align={"left"} style={{ minWidth: "80px" }}>
-                Minutes Late
+                <b>Minutes Late</b>
               </TableCell>
               <TableCell align={"left"} style={{ minWidth: "120px" }}>
-                Time-Rendered
+                <b>Time Rendered</b>
               </TableCell>
               <TableCell align={"left"} style={{ minWidth: "120px" }}>
-                Date
+                <b>Date</b>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -244,7 +244,7 @@ export default function SummList() {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[10, 30, 50]}
         component="div"
         count={rows.length}
         rowsPerPage={rowsPerPage}

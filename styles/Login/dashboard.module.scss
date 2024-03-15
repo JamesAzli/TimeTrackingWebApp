@@ -23,9 +23,9 @@
     align-items: center;
     text-align: center;
     // margin-top: 8rem;
-    font-family: 'LatoBold';
+    font-family: 'Roboto';
     font-size: 50px;
-    font-weight: 500;
+    font-weight: 700;
 }
 .date{
     text-align: center;
@@ -33,6 +33,7 @@
     margin-top: 0rem;
     color:#852525;
     font-size: 40px;
+    font-family: 'Roboto';
 
 }
 .time{
@@ -57,22 +58,35 @@
     margin-top: 3rem;
     // margin-bottom: .5rem;
     margin-right: 2rem;
-    font-family: "LatoLight"
+    font-family: "Roboto"
 
 }
 .tibutton{
     align-items: center;
     text-align: center;
-    background-color: black;
+    background-color: #000000e1;
     color:#ffffff;
     font-size: 20px;
-    width: 300;
+    width: 180px;
     height: 100;
     margin-top: 3rem;
     // margin-bottom: .5rem;
     margin-right: 1rem;
-    font-family: "LatoLight"
+    font-family: "Roboto"
 }
+// .clockinbutton{
+//     align-items: center;
+//     text-align: center;
+//     background-color: #000000e1;
+//     color:#ffffff;
+//     font-size: 20px;
+//     width: 800;
+//     height: 100;
+//     margin-top: 3rem;
+//     // margin-bottom: .5rem;
+//     margin-right: 1rem;
+//     font-family: "Roboto"
+// }
 .dbutton{
     align-items: center;
     text-align: center;

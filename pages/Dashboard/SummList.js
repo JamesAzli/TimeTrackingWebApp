@@ -45,15 +45,27 @@ import { saveAs } from "file-saver";
 import { ArrowBackIcon } from "@mui/icons-material";
 import moment from "moment-timezone";
 import { Tab } from "@mui/material";
+import { LocalizationProvider} from "@mui/lab";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { FormControl, InputLabel, Select } from "@mui/material";
+import { FaCalendarAlt } from 'react-icons/fa';
+import { DateRangePicker } from 'rsuite';
 
 
-async function fetchDocuments(setDocuments) {
-  const querySnapshot = await getDocs(collection(db, "Client-Login"));
-  const documents = querySnapshot.docs.map((doc) => doc.data());
-  const uniqueDocuments = Array.from(new Map(documents.map((doc) => [doc.uid, doc])).values());
-  setDocuments(uniqueDocuments);
-}
+// async function fetchDocuments(setDocuments) {
+//   const querySnapshot = await getDocs(collection(db, "Client-Login"));
+//   const documents = querySnapshot.docs.map((doc) => doc.data());
+//   const uniqueDocuments = Array.from(new Map(documents.map((doc) => [doc.uid, doc])).values());
+//   setDocuments(uniqueDocuments);
+// }
+
+const fetchDocuments = async (callback) => {
+  // Fetch your documents here
+  const data = await getDocs(collection(db, "Client-Login"));
+  callback(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+};
 
 export default function SummList() {
   const [page, setPage] = useState(0);
@@ -66,7 +78,9 @@ export default function SummList() {
   const [role, setRole] = useState();
   const [documents, setDocuments] = useState([])
   const [selectedRole, setSelectedRole] = useState("")
+  const [startDate, setStartDate] = useState(new Date());
 
+  
 
   useEffect(()=>{
     fetchDocuments(setDocuments);
@@ -75,9 +89,13 @@ export default function SummList() {
   const handleEditRole = async (uid) => {
     const userRef = doc(db, 'Client-Login', uid);
     await updateDoc(userRef, { role: selectedRole });
-    await fetchDocuments(setDocuments);
+    // await fetchDocuments(setDocuments);
   };
   
+  //date picker
+  const handleDateChange = (value) => {
+    setDateRange(value);
+  };
 
   useEffect(() => {
     getReports();
@@ -153,6 +171,7 @@ export default function SummList() {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -162,7 +181,16 @@ export default function SummList() {
 
   //File Download
   const confirmation = () => {
-    // Convert the data to a CSV string using Papa Parse
+    Swal.fire({
+      title: 'Confirm Export?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Export'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Convert the data to a CSV string using Papa Parse
     const csv = Papa.unparse(filteredReports);
     // Save the CSV file using FileSaver.js
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
@@ -174,69 +202,47 @@ export default function SummList() {
       title: "Export Successful",
       text: "Your data has been exported to CSV file.",
     });
+      }
+    })
+    
   };
 
-  const fetchSortedReports = async (q) => {
-    const querySnapshot = await getDocs(q);
-    const reportsData = querySnapshot.docs.map((doc) => doc.data());
-    setReports(reportsData);
+  const fetchReports = async () => {
+    const querySnapshot = await getDocs(collection(db, "Reports-Admin"));
+    const reportsData = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    return reportsData;
   };
-
-  useEffect(() => {
-    const fetchReports = async () => {
-      const querySnapshot = await getDocs(collection(db, "Reports-Admin"));
-      const reportsData = querySnapshot.docs.map((doc) => doc.data());
-      setReports(reportsData);
-    };
-    fetchReports();
-  }, []);
-  const filteredReports = reports.filter(
-    (report) =>
-      report.name &&
-      report.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const handleOrderByChange = (event) => {
-    const selectedValue = event.target.value;
-    setOrderByField(selectedValue);
-    if (selectedValue === "name") {
-      const sortName = query(
-        collection(db, "Reports-Admin"),
-        orderBy("name", "asc")
-      );
-      fetchSortedReports(sortName);
-    } else if (selectedValue === "date") {
-      const sortDate = query(
-        collection(db, "Reports-Admin"),
-        orderBy("date", "desc")
-      );
-      fetchSortedReports(sortDate);
+  
+  const sortReports = (reports, field) => {
+    if (field === "name") {
+      return reports.sort((a, b) => (a.name?.localeCompare(b.name) || 0));
+    } else if (field === "date") {
+      return reports.sort((a, b) => {
+        const dateComparison = b.date?.localeCompare(a.date);
+        if (dateComparison !== 0) {
+          return dateComparison;
+        }
+        return b.timein?.localeCompare(a.timein);
+      });
     }
+    return reports;
   };
-
+  
   useEffect(() => {
-    const fetchReports = async () => {
-      const colRef = collection(db, "Reports-Admin");
-
-      const querySnapshot = await getDocs(colRef);
-      const reportsData = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+    const fetchData = async () => {
+      const reportsData = await fetchReports();
       setReports(reportsData);
     };
-    fetchReports();
+    fetchData();
   }, []);
-
-
-  // const [totalHours, setTotalHours] = useState(0);
-
+  
   useEffect(() => {
     const updateReports = async () => {
       const updatedReports = await Promise.all(
         reports.map(async (report) => {
-          console.log("Current Report:", report);
-  
           if (report.timein && report.timeout) {
             const inTime = moment(report.timein, "h:mm A");
             const outTime = moment(report.timeout, "h:mm A");
@@ -251,14 +257,7 @@ export default function SummList() {
             const minutesDiff = duration.minutes();
   
             const updatedReport = { ...report };
-            console.log("Updated Report:", updatedReport);
-  
             updatedReport.timeRendered = `${hoursDiff} hours ${minutesDiff} minutes`;
-  
-            const reportRef = doc(db, "Reports-Admin", String(report.id)); // Convert report.id to a string
-            await updateDoc(reportRef, {
-              timeRendered: updatedReport.timeRendered,
-            });
   
             return updatedReport;
           } else {
@@ -270,26 +269,30 @@ export default function SummList() {
       setReports(updatedReports);
     };
   
-    // console.log("Reports Array:", reports);
-    updateReports();
+    if (reports.length > 0) {
+      updateReports();
+    }
   }, [reports]);
-
-
-  useEffect(() => {
-    const fetchReports = async () => {
-      const colRef = collection(db, 'Reports-Admin')
-      // const name = displayName
-      const q = query(colRef, orderBy("date", "desc"));
-      const querySnapshot = await getDocs(q);
-      const reportsData = querySnapshot.docs.map((doc) =>({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setReports(reportsData);
-     
-    };
-    fetchReports();
-  }, []);
+  
+  const handleOrderByChange = (event) => {
+    const selectedValue = event.target.value;
+    setOrderByField(selectedValue);
+  };
+  
+  const sortedReports = sortReports(reports, orderByField);
+  
+  const filteredReports = sortedReports.filter((report) => {
+    const selectedDate = startDate?.setHours(0, 0, 0, 0); // Convert selected date to start of day
+    const reportDate = new Date(report.date).setHours(0, 0, 0, 0); // Convert report date to start of day
+    const searchQueryLowerCase = searchQuery.toLowerCase();
+    const reportNameLowerCase = (report.name ?? '').toLowerCase();
+  
+    return (
+      (!searchQuery || reportNameLowerCase.includes(searchQueryLowerCase)) &&
+      (!selectedRole || report.role === selectedRole) &&
+      (!selectedDate || reportDate === selectedDate)
+    );
+  });
 
   const printContentRef = useRef(null);
 
@@ -309,178 +312,129 @@ export default function SummList() {
 
 
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden"}} elevation={8}>
-      <Typography
-        gutterBottom
-        variant="h5"
-        component="div"
-        align="center"
-        sx={{ padding: ".5rem" }}
-      >
-        Attendance Summary
-      </Typography>
-      <Divider />
-      <Box height={10} />
-      <Stack direction="row" spacing={2}>
-        {/* <Autocomplete
-             disablePortal
-             id="combo-box-demo"
-             options={rows}
-             sx={{width: 300}}
-            //  onChange={(e,v)} => filterData(v)}
-             getOptionlabel={(rows)} => rows.date || ""}
-             renderInput={(params)} => ( */}
-        <Paper
-          component="form"
-          sx={{
-            p: "2px 2px",
-            display: "flex",
-            alignItems: "center",
-            width: 350,
-          }}
-          className={stylerep.searchmargin}
-        >
-          <InputBase
-            sx={{ ml: 0.5, flex: 1 }}
-            placeholder="Search"
-            inputProps={{ "aria-label": "search" }}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-
-
-          <IconButton type="button" sx={{ p: "1px" }}>
-            <SearchIcon />
-          </IconButton>
-          {/* <Divider orientation="vertical" flexItem /> */}
-          {/* <IconButton
-            id="demo-customized-button"
-            aria-controls={open ? "demo-customized-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            variant="contained"
-            disableelevation="true"
-            onClick={handleClick}
-          >
-            <SortIcon />
-          </IconButton> */}
-        </Paper>
-
-        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-            <InputLabel
-              id="demo-simple-select-label"
-              htmlFor="order-by"
-            ></InputLabel>
-            <Select
-              id="order-by"
-              value={orderByField}
-              onChange={handleOrderByChange}
-            >
-             
-              <MenuItem value="name">Name</MenuItem>
-              <MenuItem value="date">Date</MenuItem>
-            </Select>
-          </FormControl>
-
-{/* <label htmlFor="order-by">
-        Sort By:
-      <select id="order-by" value={orderByField} onChange={handleOrderByChange}>
-        <option value="name">Name</option>
-        <option value="date">Date</option>
-      </select>
-
-</label> */}
-
-        <Typography
-          variant="h6"
-          component="div"
-          sx={{ flexGrow: 0.95 }}
-        ></Typography>
-        <Button
-          onClick={confirmation}
-          sx={{ color: "#ccd1d1" }}
-          variant="contained"
-          endIcon={<FileDownloadIcon />}
-          className={stylerep.listmargin}
-        >
-          Export
-        </Button>
-{/* 
-        <PrintButton /> */}
-
-        <Button
-          variant="contained"
-          endIcon={<PrintIcon />}
-          className={stylerep.listmargin}
-          onClick={handlePrint}
-        >
-          Print
-        </Button>
-
-      </Stack>
-      <div ref={printContentRef}>
-      <Box height={10} />
-      <TableContainer sx={{ maxHeight: 440 }}>
+    
+    <Paper sx={{ width: '100%', overflow: 'hidden' }} elevation={8}>
+  <Typography gutterBottom variant="h5" component="div" align="center" sx={{ padding: '.5rem' }}>
+    Attendance Summary
+  </Typography>
+  <Divider />
+  <Box height={10} />
+  <Stack direction="row" spacing={2}>
+    <Box
+      component="form"
+      sx={{
+        p: '2px 2px',
+        display: 'flex',
+        alignItems: 'center',
+        width: 350,
+      }}
+      className={stylerep.searchmargin}
+    >
+      <InputBase
+        sx={{ ml: 0.5, flex: 1 }}
+        placeholder="Search"
+        inputProps={{ 'aria-label': 'search' }}
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+      <IconButton type="button" sx={{ p: '1px' }}>
+        <SearchIcon />
+      </IconButton>
+    </Box>
+    <FormControl sx={{ m: 1, minWidth: 120,zIndex: 9999 }} size="small">
+      <DatePicker selected={startDate} onChange={(date) => setStartDate(date)}
+       style={{ fontSize: '18px', width: '300px', height: '40px' }} 
+       />
+    </FormControl>
+    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+      <InputLabel id="demo-simple-select-label" htmlFor="order-by"></InputLabel>
+      <Select id="order-by" value={orderByField} onChange={handleOrderByChange}>
+        <MenuItem value="name">Name</MenuItem>
+        <MenuItem value="date">Date</MenuItem>
+      </Select>
+    </FormControl>
+    <Typography variant="h6" component="div" sx={{ flexGrow: 0.95 }}></Typography>
+    <Button
+      onClick={confirmation}
+      sx={{ color: '#ccd1d1' }}
+      variant="contained"
+      endIcon={<FileDownloadIcon />}
+      className={stylerep.listmargin}
+    >
+      Export
+    </Button>
+    <Button
+      variant="contained"
+      endIcon={<PrintIcon />}
+      className={stylerep.listmargin}
+      onClick={handlePrint}
+    >
+      Print
+    </Button>
+  </Stack>
+  <div ref={printContentRef}>
+    <Box height={10} />
+	 <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
               <TableCell align={"left"} style={{ minWidth: "150px" }}>
-                Name
+                <b>Name</b>
               </TableCell>
               <TableCell align={"left"} style={{ minWidth: "100px" }}>
-                Geo Location
+              <b>Geo Location</b>
               </TableCell>
               <TableCell align={"left"} style={{ minWidth: "80px" }}>
-                Time-In
+              <b>TimeIn</b>
               </TableCell>
               <TableCell align={"left"} style={{ minWidth: "80px" }}>
-                Time-Out
+              <b>TimeOut</b>
               </TableCell>
               <TableCell align={"left"} style={{ minWidth: "80px" }}>
-                Minutes Late
+              <b>Minutes Late</b>
               </TableCell>
               <TableCell align={"left"} style={{ minWidth: "120px" }}>
-                Time-Rendered
+              <b>Time Rendered</b>
               </TableCell>
               <TableCell align={"left"} style={{ minWidth: "120px" }}>
-                Date
+              <b>Remarks</b>
+              </TableCell>
+              <TableCell align={"left"} style={{ minWidth: "120px" }}>
+              <b>Date</b>
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {reports
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1}>
-                    <TableCell key={row.id} align={"left"}>
-                      {row.name}
-                    </TableCell>
-                    <TableCell align={"left"}>{row.location}</TableCell>
-                    <TableCell align={"left"}>{row.timein}</TableCell>
-                    <TableCell align={"left"}>{row.timeout}</TableCell>
-                    <TableCell align={"left"}>{row.lateMinutes}</TableCell>
-                    <TableCell>
-                  {row.timeRendered}
-                    </TableCell>
-                    <TableCell align={"left"}>{row.date}</TableCell>
-                  </TableRow>
+          {filteredReports
+          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+          .map((row) => {
+      return (
+        <TableRow key={row.id} hover role="checkbox" tabIndex={-1}>
+        <TableCell align="left">{row.name}</TableCell>
+        <TableCell align="left">{row.location}</TableCell>
+        <TableCell align="left">{row.timein}</TableCell>
+        <TableCell align="left">{row.timeout}</TableCell>
+        <TableCell align="left">{row.lateMinutes}</TableCell>
+        <TableCell>{row.timeRendered}</TableCell>
+        <TableCell align="left">{row.remarks}</TableCell>
+        <TableCell align="left">{row.date}</TableCell>
+        </TableRow>
                 );
               })}
           </TableBody>
         </Table>
-      </TableContainer>
-      </div>
-      <TablePagination
-        rowsPerPageOptions={[10, 30, 50]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+		 </TableContainer>
+		 </div>
+  <TablePagination
+    rowsPerPageOptions={[10, 30, 50]}
+    component="div"
+    count={rows.length}
+    rowsPerPage={rowsPerPage}
+    page={page}
+    onPageChange={handleChangePage}
+    onRowsPerPageChange={handleChangeRowsPerPage}
+  />
+</Paper>
     
   );
 }
