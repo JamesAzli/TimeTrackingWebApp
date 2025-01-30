@@ -53,6 +53,14 @@ import { FormControl, InputLabel, Select } from "@mui/material";
 import { FaCalendarAlt } from 'react-icons/fa';
 import { DateRangePicker } from 'rsuite';
 
+
+// async function fetchDocuments(setDocuments) {
+//   const querySnapshot = await getDocs(collection(db, "Client-Login"));
+//   const documents = querySnapshot.docs.map((doc) => doc.data());
+//   const uniqueDocuments = Array.from(new Map(documents.map((doc) => [doc.uid, doc])).values());
+//   setDocuments(uniqueDocuments);
+// }
+
 const fetchDocuments = async (callback) => {
   // Fetch your documents here
   const data = await getDocs(collection(db, "Client-Login"));
@@ -60,10 +68,10 @@ const fetchDocuments = async (callback) => {
 };
 
 export default function SummList() {
+  const Ereports = collection(db, "Reports-Admin");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [rows, setRows] = useState([]);
-  const Ereports = collection(db, "Reports-Admin");
   const [orderByField, setOrderByField] = useState("name");
   const [reports, setReports] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -72,7 +80,7 @@ export default function SummList() {
   const [selectedRole, setSelectedRole] = useState("")
   const [startDate, setStartDate] = useState(new Date());
 
-  useEffect(() => {
+  useEffect(()=>{
     fetchDocuments(setDocuments);
   }, [])
 
@@ -88,18 +96,19 @@ export default function SummList() {
   };
 
   useEffect(() => {
-    const getReports = async () => {
-      const data = await getDocs(Ereports);
-      setRows(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
     getReports();
-  }, [Ereports]);
+  }, []);
 
   const router = useRouter();
 
   function handleBack() {
     router.push("../Dashboard/AdminDash"); // Navigate back to the previous page
   }
+
+  const getReports = async () => {
+    const data = await getDocs(Ereports);
+    setRows(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -109,54 +118,6 @@ export default function SummList() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-
-  // const confirmation = () => {
-  //   Swal.fire({
-  //     title: 'Successfully Collected',
-  //     text: "Your file is ready to download!",
-  //     icon: 'success',
-  //     showCancelButton: true,
-  //     confirmButtonColor: '#3085d6',
-  //     cancelButtonColor: '#d33',
-  //     confirmButtonText: 'Download'
-
-  //   })
-  // };
-
-  //Sorting
-  const StyledMenu = styled((props) => (
-    <Menu
-
-      anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "right",
-      }}
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      {...props}
-    />
-  ))(({ theme }) => ({
-    "& .MuiPaper-root": {
-      borderRadius: 6,
-      marginTop: theme.spacing(1),
-      minWidth: 180,
-      color: "#852525",
-      boxShadow:
-        "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
-      "& .MuiMenu-list": {
-        padding: "4px 0",
-      },
-      "& .MuiMenuItem-root": {
-        "& .MuiSvgIcon-root": {
-          fontSize: 16,
-          color: "#852525",
-          marginRight: theme.spacing(1.5),
-        },
-      },
-    },
-  }));
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -302,7 +263,7 @@ export default function SummList() {
 
   return (
     
-    <Paper sx={{ width: '100%', overflow: 'hidden' }} elevation={8}>
+    <Paper sx={{ width: '100%', overflow: 'visible' }} elevation={8}>
   <Typography gutterBottom variant="h5" component="div" align="center" sx={{ padding: '.5rem' }}>
     Attendance Summary
   </Typography>
