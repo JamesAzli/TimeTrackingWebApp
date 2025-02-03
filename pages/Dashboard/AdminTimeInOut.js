@@ -7,8 +7,8 @@ import { Button } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import 'firebase/auth';
-import {auth} from '../../firebase';
-import {db} from '../../firebase'
+import { auth } from '../../firebase';
+import { db } from '../../firebase'
 import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import cookie from "js-cookie";
 import NavbarAdmin from '../../components/NavbarAdmin';
@@ -40,20 +40,27 @@ export default function MenuAppBar() {
     );
   }, []);
 
-  useEffect(() => {
-    const fetchAddress = async () => {
-      if (latitude && longitude) {
-        const url = `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=70340e1405914cfdad41d0ffa38b9b4e`;
-        try {
-          const response = await fetch(url);
-          const data = await response.json();
-          const address = data.results[0].formatted;
-          setPlace(address);
-        } catch (error) {
-          console.error(error);
+  const fetchAddress = async () => {
+    if (latitude && longitude) {
+      const url = `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=70340e1405914cfdad41d0ffa38b9b4e`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
+        if (data.results.length > 0) {
+          setPlace(data.results[0].formatted);
+        } else {
+          setPlace("Location not found");
         }
+      } catch (error) {
+        console.error(error);
+        setPlace("Error fetching location.");
       }
-    };
+    }
+  };
+
+  useEffect(() => {
     fetchAddress();
   }, [latitude, longitude]);
 
@@ -79,46 +86,64 @@ export default function MenuAppBar() {
   useEffect(() => {
     const fetchTimeIn = async () => {
       try {
-        const response = await fetch("http://worldtimeapi.org/api/timezone/Asia/Manila/");
+        const response = await fetch("https://timeapi.io/api/time/current/zone?timeZone=Asia%2FSingapore");
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
+
         const data = await response.json();
-        const dateTime = new Date(data.datetime);
-        const timeString = dateTime.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        });
-        setTimeIn(timeString);
+        console.log("API Response:", data); // Debugging log
+
+        // Extract hour and minute from API response
+        let hours = data.hour;
+        let minutes = data.minute;
+
+        // Convert to 12-hour format
+        const ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12; // Convert 0 to 12 for 12-hour format
+        const formattedTime = `${hours}:${minutes.toString().padStart(2, "0")}${ampm}`;
+
+        setTimeIn(formattedTime); // Update state with formatted time
+
       } catch (err) {
-        console.error(err);
-        setTimeOut(fetchTimeIn, 5000); // retry after 5 seconds
+        console.error("Error fetching time:", err);
+        setTimeIn(fetchTimeIn, 5000); // Retry after 5 seconds if there's an error
       }
     };
+
     fetchTimeIn();
   }, []);
 
   useEffect(() => {
     const fetchTimeOut = async () => {
       try {
-        const response = await fetch("http://worldtimeapi.org/api/timezone/Asia/Manila/");
+        const response = await fetch("https://timeapi.io/api/time/current/zone?timeZone=Asia%2FSingapore");
+        
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
+
         const data = await response.json();
-        const dateTime = new Date(data.datetime);
-        const timeString = dateTime.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-        });
-        setTimeOut(timeString);
+        console.log("API Response:", data); // Debugging log
+
+        // Extract hour and minute from API response
+        let hours = data.hour;
+        let minutes = data.minute;
+
+        // Convert to 12-hour format
+        const ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12; // Convert 0 to 12 for 12-hour format
+        const formattedTime = `${hours}:${minutes.toString().padStart(2, "0")}${ampm}`;
+
+        setTimeOut(formattedTime); // Update state with formatted time
+
       } catch (err) {
-        console.error(err);
-        setTimeout(fetchTimeOut, 5000); // retry after 5 seconds
+        console.error("Error fetching time:", err);
+        setTimeout(fetchTimeOut, 5000); // Retry after 5 seconds if there's an error
       }
     };
+
     fetchTimeOut();
   }, []);
 
@@ -154,33 +179,159 @@ export default function MenuAppBar() {
 
 
   const handleClick = async () => {
-  const locationPermission = await navigator.permissions.query({ name: 'geolocation' });
+    const locationPermission = await navigator.permissions.query({ name: 'geolocation' });
 
-  if (locationPermission.state === 'denied') {
+    if (locationPermission.state === 'denied') {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Oops...',
+        text: 'Please enable your location',
+      });
+    } else if (documentId) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'You have already timed in. Please time out first before timing in again.',
+      });
+    } else {
+      Swal.fire({
+        title: 'Add Note',
+        input: 'text',
+        inputLabel: 'Note',
+        inputPlaceholder: 'Enter a note (optional)',
+        showCancelButton: true,
+        confirmButtonText: 'Time In',
+        showLoaderOnConfirm: true,
+        preConfirm: async (note) => {
+          toast.success("TimeIn Recorded!", {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          // Perform the time-in action and save the note to the database
+          const timePeriods = [
+            { name: 'Morning', start: { hours: 7, minutes: 15 } },
+            { name: 'Afternoon', start: { hours: 12, minutes: 15 } },
+            { name: 'Evening', start: { hours: 22, minutes: 15 } },
+            { name: 'Night', start: { hours: 3, minutes: 15 } },
+          ];
+
+          const actualTimeIn = new Date();
+
+          let leastMinutesLate = Infinity;
+          let timePeriodForLateness = null;
+          let hoursLate = 0;
+          let minutesLate = 0;
+
+          timePeriods.forEach((timePeriod) => {
+            const expectedTimeIn = new Date();
+            expectedTimeIn.setHours(timePeriod.start.hours, timePeriod.start.minutes, 0);
+            const timeDifference = Math.abs(actualTimeIn.getTime() - expectedTimeIn.getTime());
+
+            if (timeDifference > 0 && timeDifference < leastMinutesLate) {
+              leastMinutesLate = timeDifference;
+              timePeriodForLateness = timePeriod;
+              const totalMinutesLate = Math.floor(leastMinutesLate / (1000 * 60));
+              hoursLate = Math.floor(totalMinutesLate / 60);
+              minutesLate = totalMinutesLate % 60;
+            }
+          });
+
+          if (leastMinutesLate !== Infinity) {
+            console.log(`Lateness for ${timePeriodForLateness.name}`);
+            console.log(`Hours late: ${hoursLate}`);
+            console.log(`Minutes late: ${minutesLate}`);
+          } else {
+            console.log('No lateness recorded');
+          }
+
+          // Save the note to the database
+          try {
+            const docRef = await addDoc(collection(db, 'Reports-Admin'), {
+              timein: timeIn,
+              name: displayName,
+              location: place,
+              date: showDate,
+              lateMinutes: leastMinutesLate !== Infinity ? `${hoursLate} hours ${minutesLate} minutes` : '',
+              remarks: note || '',
+            });
+
+            console.log('New document created with ID: ', docRef.id);
+            setDocumentId(docRef.id);
+            cookie.set('documentId', docRef.id, { expires: 1 });
+          } catch (error) {
+            console.error('Error adding document: ', error);
+          }
+        },
+      });
+    }
+  };
+
+
+  const handleTimeoutClick = async () => {
+    if (!documentId) {
+      // User has not timed in yet
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'You have not timed in yet. Please time in before timing out.',
+      });
+      return;
+    }
     Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
       icon: 'warning',
-      title: 'Oops...',
-      text: 'Please enable your location',
-    });
-  } else if (documentId) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: 'You have already timed in. Please time out first before timing in again.',
-    });
-  } else {
-    Swal.fire({
-      title: 'Add Note',
-      input: 'text',
-      inputLabel: 'Note',
-      inputPlaceholder: 'Enter a note (optional)',
       showCancelButton: true,
-      confirmButtonText: 'Time In',
-      showLoaderOnConfirm: true,
-      preConfirm: async (note) => {
-        toast.success("TimeIn Recorded!", {
+      confirmButtonText: 'Confirm Clock-Out',
+      cancelButtonText: 'No, cancel',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#852525',
+      reverseButtons: true
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        if (!timeOut) {
+          console.error("Error: timeOut is undefined or null.");
+          return;
+        }
+        try {
+          const documentRef = doc(db, "Reports-Admin", documentId);
+          await updateDoc(documentRef, {
+            timeout: timeOut, // Ensure this is a valid value
+          });
+
+          // ✅ Successfully updated, now reset documentId & remove cookie
+          setDocumentId(null);
+          cookie.remove("documentId");
+
+          // ✅ Show success message
+          Swal.fire({
+            title: "Clock-Out Successful!",
+            text: "Your timeout has been recorded.",
+            icon: "success",
+            confirmButtonColor: "#3085d6",
+          });
+
+        } catch (error) {
+          console.error("Failed to update document:", error);
+
+          // Show an error message if update fails
+          Swal.fire({
+            title: "Error!",
+            text: "Failed to update timeout. Please try again.",
+            icon: "error",
+            confirmButtonColor: "#d33",
+          });
+        }
+
+        toast.success("Clock-Out Recorded!", {
           position: "top-center",
-          autoClose: 5000,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -188,116 +339,17 @@ export default function MenuAppBar() {
           progress: undefined,
           theme: "light",
         });
-        // Perform the time-in action and save the note to the database
-        const timePeriods = [
-          { name: 'Morning', start: { hours: 7, minutes: 15 } },
-          { name: 'Afternoon', start: { hours: 12, minutes: 15 } },
-          { name: 'Evening', start: { hours: 22, minutes: 15 } },
-          { name: 'Night', start: { hours: 3, minutes: 15 } },
-        ];
-
-        const actualTimeIn = new Date();
-
-        let leastMinutesLate = Infinity;
-        let timePeriodForLateness = null;
-        let hoursLate = 0;
-        let minutesLate = 0;
-
-        timePeriods.forEach((timePeriod) => {
-          const expectedTimeIn = new Date();
-          expectedTimeIn.setHours(timePeriod.start.hours, timePeriod.start.minutes, 0);
-          const timeDifference = Math.abs(actualTimeIn.getTime() - expectedTimeIn.getTime());
-
-          if (timeDifference > 0 && timeDifference < leastMinutesLate) {
-            leastMinutesLate = timeDifference;
-            timePeriodForLateness = timePeriod;
-            const totalMinutesLate = Math.floor(leastMinutesLate / (1000 * 60));
-            hoursLate = Math.floor(totalMinutesLate / 60);
-            minutesLate = totalMinutesLate % 60;
-          }
-        });
-
-        if (leastMinutesLate !== Infinity) {
-          console.log(`Lateness for ${timePeriodForLateness.name}`);
-          console.log(`Hours late: ${hoursLate}`);
-          console.log(`Minutes late: ${minutesLate}`);
-        } else {
-          console.log('No lateness recorded');
-        }
-
-        // Save the note to the database
-        try {
-          const docRef = await addDoc(collection(db, 'Reports-Admin'), {
-            timein: timeIn,
-            name: displayName,
-            location: place,
-            date: showDate,
-            lateMinutes: leastMinutesLate !== Infinity ? `${hoursLate} hours ${minutesLate} minutes` : '',
-            remarks: note || '',
-          });
-
-          console.log('New document created with ID: ', docRef.id);
-          setDocumentId(docRef.id);
-          cookie.set('documentId', docRef.id, { expires: 1 });
-        } catch (error) {
-          console.error('Error adding document: ', error);
-        }
-      },
-    });
-  }
-};
-
-  
-const handleTimeoutClick = async () => {
-  if (!documentId) {
-    // User has not timed in yet
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: 'You have not timed in yet. Please time in before timing out.',
-    });
-    return;
-  }
-  Swal.fire({
-    title: 'Are you sure?',
-    text: "You won't be able to revert this!",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Confirm Clock-Out',
-    cancelButtonText: 'No, cancel',
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#852525',
-    reverseButtons: true
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      const documentRef = doc(db, "Reports-Admin", documentId);
-    await updateDoc(documentRef, {
-      timeout: timeOut,
-    });
-    setDocumentId(null);
-    cookie.remove("documentId");
-
-    toast.success("Clock-Out Recorded!", {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-    } else if (
-      result.dismiss === Swal.DismissReason.cancel
-    ) {
-      Swal.fire(
-        'Cancelled',
-        'Time out not recorded',
-        'error'
-      )
-    }
-  })  
-};
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        Swal.fire(
+          'Cancelled',
+          'Time out not recorded',
+          'error'
+        )
+      }
+    })
+  };
 
   const handleChange = (e) => {
     setAuth(e.target.checked);
@@ -321,51 +373,51 @@ const handleTimeoutClick = async () => {
   }
 
   return (
-    <>  
+    <>
       <NavbarAdmin />
       <Box height={70} />
-      <Box sx={{display: "flex"}}>
+      <Box sx={{ display: "flex" }}>
         <SidenavAdmin />
-        <Box component="main" sx={{ flexGrow:1, p:3}}>
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
 
-        <div>
-          <Typography
-            className={styles.goodday}
-            component="div"
-            sx={{ flexGrow: 1 }}
-          >
-            {/* <br/> */}
-            Good Day {displayName}
-          </Typography>
           <div>
-            <div className={styles.time}>{showTime}</div>
-            <br />
+            <Typography
+              className={styles.goodday}
+              component="div"
+              sx={{ flexGrow: 1 }}
+            >
+              {/* <br/> */}
+              Good Day {displayName}
+            </Typography>
+            <div>
+              <div className={styles.time}>{showTime}</div>
+              <br />
+            </div>
           </div>
-        </div>
-        <div className={styles.date}>{showDatePage}</div>
-      
+          <div className={styles.date}>{showDatePage}</div>
 
-      <div className={styles.dbutton}>
-        <Button onClick={handleClick} className={styles.tibutton}>
-          Clock-In
-        </Button>
-        <Button onClick={handleTimeoutClick}  className={styles.tibutton}>
-          Clock-Out
-        </Button>
-        {/* {dateString && <p>Time-In Recorded at: {dateString}</p>} */}
-        <ToastContainer
-          position="top-center"
-          autoClose={2000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-         </div>
+
+          <div className={styles.dbutton}>
+            <Button onClick={handleClick} className={styles.tibutton}>
+              Clock-In
+            </Button>
+            <Button onClick={handleTimeoutClick} className={styles.tibutton}>
+              Clock-Out
+            </Button>
+            {/* {dateString && <p>Time-In Recorded at: {dateString}</p>} */}
+            <ToastContainer
+              position="top-center"
+              autoClose={2000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
+          </div>
         </Box>
       </Box>
     </>
