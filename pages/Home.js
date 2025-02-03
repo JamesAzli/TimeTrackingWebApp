@@ -13,7 +13,6 @@ import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import cookie from "js-cookie";
 import Navbar from '../components/NavbarEmp'
 import Swal from "sweetalert2";
-import { Note } from "@mui/icons-material";
 
 export default function MenuAppBar() {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -25,7 +24,6 @@ export default function MenuAppBar() {
   const [documentId, setDocumentId] = useState();
   const [timeIn, setTimeIn] = useState();
   const [timeOut, setTimeOut] = useState();
-  const [setComment, comments] = useState();
 
   useEffect(() => {
     const fetchLocation = async () => {

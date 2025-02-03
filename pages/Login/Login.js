@@ -8,21 +8,17 @@ import Grid from "@mui/material/Grid";
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Container } from "@mui/material";
 import logo from "../../public/images/GiantLogoW.png";
 import Image from "next/image";
 import GoogleButton from "react-google-button";
 import styles from "../../styles/Login/login.module.scss";
 import Dashboard from "./dashboard";
-import firebase from "firebase/app";
 import "firebase/firestore";
 import { auth, provider } from "../../firebase";
 import { db } from "../../firebase";
 import { signInWithPopup } from "firebase/auth";
 import { useRouter } from "next/router";
-import { collection, addDoc, doc, setDoc, getDoc } from "firebase/firestore";
-import dash from "../Dashboard/AdminDash";
-// import Home from "../Home"
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 function LoginT() {
   // const theme = createTheme();
@@ -36,16 +32,11 @@ function LoginT() {
 
   const [user, setUser] = useState("");
   const router = useRouter();
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
-  const [place, setPlace] = useState(null);
 
   const handleClick = async () => {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
     const uid = user.uid;
-    const email = user.email;
-    const name = user.displayName;
     let role = ""
 
     if (user.role == "Admin") {
@@ -53,17 +44,17 @@ function LoginT() {
     } else {
       role = "Employee";
     }
-  
+
     const userRef = doc(db, 'Client-Login', uid);
     const docSnap = await getDoc(userRef);
-  
+
     if (docSnap.exists()) {
       const role = docSnap.get("role");
       if (role === "Admin") {
         router.push('/Dashboard/AdminTimeInOut');
       } else {
         router.push('/Home');
-      } 
+      }
     } else {
       // Add the user to the 'users' collection in Firestore
       await setDoc(doc(db, "Client-Login", uid), {
@@ -72,14 +63,14 @@ function LoginT() {
         email: user.email,
         role: role
       });
-      
+
       if (user.role === "Admin") {
         router.push('/Login/superAdminReps');
       } else {
         router.push('/Home');
-      } 
+      }
       // Route to Admin Dashboard or Home based on user's role
-      
+
     }
   };
 
@@ -99,29 +90,6 @@ function LoginT() {
             mt: 20,
           }}
         >
-          {/* <Grid container>
-            <CssBaseline />
-  
-            <Grid
-              item
-              xs={12}
-              sm={8}
-              md={5}
-              component={Paper}
-              elevation={6}
-              square
-            > */}
-          {/* <Box
-                sx={{
-                  my: 8,
-                  mx: 8,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-               > */}
-
-      
           <Typography component="h1" variant="h6">
             Log in to your Account
           </Typography>
@@ -150,11 +118,6 @@ function LoginT() {
               id="password"
               autoComplete="current-password"
             />
-
-            {/* <FormControlLabel className={styles.labels} 
-                  control={<Checkbox value="remember"  size="small" />}
-                  label= "Remember me" 
-                /> */}
 
             <Button
               className={styles.FormButton}
@@ -198,7 +161,7 @@ function LoginT() {
             backgroundPosition: "center",
             backgroundColor: "#852525",
             backgroundPosition: "center",
-            
+
           }}
         />
       </Grid>

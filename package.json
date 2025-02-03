@@ -30,6 +30,7 @@
     "nodemon": "^2.0.22",
     "npm": "^9.7.1",
     "papaparse": "^5.4.1",
+    "prettier": "^3.4.2",
     "react": "18.2.0",
     "react-bootstrap": "^2.7.2",
     "react-datepicker": "^4.12.0",

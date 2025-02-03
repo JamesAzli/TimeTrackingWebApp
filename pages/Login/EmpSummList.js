@@ -15,21 +15,14 @@ import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import stylerep from "../../styles/Login/empreports.module.scss";
-import InputBase from "@mui/material/InputBase";
-import IconButton from "@mui/material/IconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import SearchIcon from "@mui/icons-material/Search";
-import Swal from "sweetalert2";
 import { auth } from "../../firebase";
-import firebase from "firebase/app";
 import moment from "moment-timezone";
 import {
   collection,
   getDocs,
   query,
   where,
-  doc,
-  updateDoc,
   orderBy
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";

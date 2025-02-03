@@ -1,14 +1,12 @@
 import React from 'react'
 import {db} from "../../firebase"
  import {auth} from "../../firebase"
-import firebase from "firebase/app";
 import {getAuth,onAuthStateChanged} from "firebase/auth";
 import { useState,useEffect } from 'react'
 
 function SampleReport() {
 
     const [reports, setReports] = useState([]);
-    const [uid, setUid] = useState(null);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {

@@ -93,7 +93,7 @@ export default function MenuAppBar() {
         setTimeIn(timeString);
       } catch (err) {
         console.error(err);
-        setTimeIn(fetchTimeIn, 5000); // retry after 5 seconds
+        setTimeOut(fetchTimeIn, 5000); // retry after 5 seconds
       }
     };
     fetchTimeIn();

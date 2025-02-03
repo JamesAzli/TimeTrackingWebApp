@@ -1,9 +1,6 @@
 import React from "react";
-import SidenavAdmin from "../../components/SidenavAdmin";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import NavbarEmp from "../../components/NavbarEmp";
-import stylerep from '../../styles/Login/empreports.module.scss'
 import EmpSummList from "./EmpSummList";
 import Head from 'next/head';
 
