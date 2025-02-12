@@ -33,7 +33,7 @@ export default function MenuAppBar() {
         });
         const { latitude, longitude } = position.coords;
         
-        const url = `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=cada18a586924614b6d60d9ac25c1945`;
+        const url = `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=70340e1405914cfdad41d0ffa38b9b4e`;
         const response = await fetch(url);
         const data = await response.json();
         const address = data.results[0].formatted;

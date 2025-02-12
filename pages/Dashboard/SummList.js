@@ -2,17 +2,10 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import { useRef } from "react";
 import { useRouter } from "next/router";
-import { db, auth } from "../../firebase";
-// import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../firebase";
 import {
   collection,
   getDocs,
-  query,
-  where,
-  orderBy,
-  updateDoc,
-  doc,
-  setDoc
 } from "firebase/firestore";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -33,33 +26,14 @@ import stylerep from "../../styles/Login/adminreports.module.scss";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-import { styled } from "@mui/material/styles";
-import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import SortByAlphaIcon from "@mui/icons-material/SortByAlpha";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import SortIcon from "@mui/icons-material/Sort";
 import Swal from "sweetalert2";
 import Papa from "papaparse";
 import { saveAs } from "file-saver";
-import { ArrowBackIcon } from "@mui/icons-material";
 import moment from "moment-timezone";
-import { Tab } from "@mui/material";
-import { LocalizationProvider} from "@mui/lab";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { FormControl, InputLabel, Select } from "@mui/material";
-import { FaCalendarAlt } from 'react-icons/fa';
-import { DateRangePicker } from 'rsuite';
-
-
-// async function fetchDocuments(setDocuments) {
-//   const querySnapshot = await getDocs(collection(db, "Client-Login"));
-//   const documents = querySnapshot.docs.map((doc) => doc.data());
-//   const uniqueDocuments = Array.from(new Map(documents.map((doc) => [doc.uid, doc])).values());
-//   setDocuments(uniqueDocuments);
-// }
 
 const fetchDocuments = async (callback) => {
   // Fetch your documents here
@@ -75,35 +49,19 @@ export default function SummList() {
   const [orderByField, setOrderByField] = useState("name");
   const [reports, setReports] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [role, setRole] = useState();
   const [documents, setDocuments] = useState([])
   const [selectedRole, setSelectedRole] = useState("")
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(null);
 
   useEffect(()=>{
     fetchDocuments(setDocuments);
   }, [])
-
-  const handleEditRole = async (uid) => {
-    const userRef = doc(db, 'Client-Login', uid);
-    await updateDoc(userRef, { role: selectedRole });
-    // await fetchDocuments(setDocuments);
-  };
-  
-  //date picker
-  const handleDateChange = (value) => {
-    setDateRange(value);
-  };
 
   useEffect(() => {
     getReports();
   }, []);
 
   const router = useRouter();
-
-  function handleBack() {
-    router.push("../Dashboard/AdminDash"); // Navigate back to the previous page
-  }
 
   const getReports = async () => {
     const data = await getDocs(Ereports);
