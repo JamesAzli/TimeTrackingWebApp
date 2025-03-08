@@ -12,7 +12,6 @@ import logo from "../../public/images/GiantLogoW.png";
 import Image from "next/image";
 import GoogleButton from "react-google-button";
 import styles from "../../styles/Login/login.module.scss";
-import Dashboard from "./dashboard";
 import "firebase/firestore";
 import { auth, provider } from "../../firebase";
 import { db } from "../../firebase";
@@ -134,7 +133,7 @@ function LoginT() {
           </Box>
           <div>
             {user ? (
-              <Dashboard />
+              <p>Welcome, {user.displayName}!</p>
             ) : (
               <GoogleButton
                 className={styles.GoogleButton}
