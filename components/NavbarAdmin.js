@@ -191,7 +191,7 @@ export default function Navbar() {
           >
             <MenuIcon />
           </IconButton>
-          <Image src={logo} className={styles.logo}/>
+          <Image src={logo} alt="Company Logo" className={styles.logo}/>
           <Typography
             variant="h6"
             noWrap

@@ -197,7 +197,7 @@ export default function Navbar() {
       <AppBar position="fixed" elevation= "0" className={styles.AppBar} >
         <Toolbar>
           
-          <Image src={logo} className={styles.logo}/>
+          <Image src={logo} alt="Company Logo" className={styles.logo}/>
           <Typography
             variant="h6"
             noWrap
