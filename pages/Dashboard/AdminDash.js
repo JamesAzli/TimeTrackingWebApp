@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import styledash from '../../styles/Login/admindash.module.scss'
+import styles from '../../styles/Login/admindash.module.scss'
 import { useTheme } from '@mui/material/styles';
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
@@ -44,14 +44,14 @@ export default function Admindash() {
       <Box height={70} />
       <Box sx={{ display: "flex" }}>
         <SidenavAdmin />
-        <Card sx={{ display: 'flex' }} className={styledash.align}>
+        <Card sx={{ display: 'flex' }} className={styles.align}>
 
           <CardContent sx={{ flex: '1 0 auto' }} >
             <Typography component="div" variant="h5" align="center">
               Total Number of Employees
             </Typography>
             <div>{
-              counts && <Typography variant="subtitle1" color="#852525" component="div" className={styledash.text}>
+              counts && <Typography variant="subtitle1" color="#852525" component="div" className={styles.text}>
                 {counts.empCount}
               </Typography>}
             </div>

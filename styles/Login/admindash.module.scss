@@ -13,21 +13,20 @@
     margin-left: 20px;
     color:red;
 }
-.text{
-    color:#852525;
-    font-size: 5rem;
-    font-family: 'Roboto';
+.align {
+  margin: 2rem auto;
+  background-color: #f9f6fb !important;
+  box-shadow: 0 4px 20px rgba(133, 37, 37, 0.1);
+  border-radius: 16px;
+  max-width: 400px;
 }
-.align{
-    align-items: center;
-    align-content: center;
-    text-align: center;
-    margin: auto;
-    width: 50%;
-    padding: 10px;
-    margin-top: 5rem;
+
+:global(.MuiCard-root).align {
+  background-color: #f9f6fb !important;
 }
-// .bgcolor{
-//     min-height: 100vh;
-//     background: linear-gradient(to bottom, #852525, #aa596c, #c190ab, #d9c9dc, #ffffff);
-// }
+
+:global(.MuiTypography-root).text {
+  color: #852525 !important;
+  font-weight: bold;
+  font-size: 2rem;
+}

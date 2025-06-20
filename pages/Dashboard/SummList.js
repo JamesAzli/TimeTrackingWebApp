@@ -22,7 +22,7 @@ import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import PrintIcon from "@mui/icons-material/Print";
-import stylerep from "../../styles/Login/adminreports.module.scss";
+import styles from "../../styles/Login/adminreports.module.scss";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
@@ -236,7 +236,7 @@ export default function SummList() {
         alignItems: 'center',
         width: 350,
       }}
-      className={stylerep.searchmargin}
+      className={styles.searchmargin}
     >
       <InputBase
         sx={{ ml: 0.5, flex: 1 }}
@@ -267,14 +267,14 @@ export default function SummList() {
       sx={{ color: '#ccd1d1' }}
       variant="contained"
       endIcon={<FileDownloadIcon />}
-      className={stylerep.listmargin}
+      className={styles.listmargin}
     >
       Export
     </Button>
     <Button
       variant="contained"
       endIcon={<PrintIcon />}
-      className={stylerep.listmargin}
+      className={styles.listmargin}
       onClick={handlePrint}
     >
       Print

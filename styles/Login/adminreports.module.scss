@@ -2,19 +2,17 @@
     min-height: 100vh;
     // background-image: linear-gradient(to top, #852525, #aa596c, #c190ab, #d9c9dc, #ffffff);
 }
-.searchmargin{
-    margin-left: 2rem;
-    border-radius: 10rem;
-}
-.listmargin{
+:global(.MuiButton-root) {
+  &.listmargin {
     margin-right: 16rem;
-    color: #FFFF;
-    background-color: #852525;
+    color: #FFFF !important;
+    background-color: #852525 !important;
     &:hover {
-        color:#852525;
-        background-color: #eccccc;
-        border-color: #852525;
+      color: #852525 !important;
+      background-color: #eccccc !important;
+      border-color: #852525 !important;
     }
+  }
 }
 .tablehead{
     background-color: #dad8d8;
