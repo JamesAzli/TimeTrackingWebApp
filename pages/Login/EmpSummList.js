@@ -14,7 +14,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
-import stylerep from "../../styles/Login/empreports.module.scss";
+import styles from "../../styles/Login/empreports.module.scss";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { auth } from "../../firebase";
 import moment from "moment-timezone";
@@ -85,7 +85,7 @@ export default function SummList() {
   };
 
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }} elevation={8}>
+    <Paper className={styles.longPaper}>
       <Typography
         gutterBottom
         variant="h5"
@@ -103,7 +103,7 @@ export default function SummList() {
           size="small"
           variant="outlined"
           startIcon={<ArrowBackIcon />}
-          className={stylerep.listmargin}
+          className={styles.listmargin}
           onClick={handleBack}
         >
           Back to Dashboard

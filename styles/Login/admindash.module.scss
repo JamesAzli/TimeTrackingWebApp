@@ -1,24 +1,31 @@
-.gradient{
-    // background: rgb(70, 68, 68);
-    // background: linear-gradient(50deg, rgb(145, 17, 17) 0%, rgb(231, 226, 226)100%);
-    background-color: white;
+.gradient {
+  // background: rgb(70, 68, 68);
+  // background: linear-gradient(50deg, rgb(145, 17, 17) 0%, rgb(231, 226, 226)100%);
+  background-color: white;
 
 }
-.gradientlight{
-    background: rgb(97, 93, 70);
-    background: linear-gradient(50deg, rgb(145, 17, 17) 0%, rgb(231, 226, 226) 100%);
+
+.gradientlight {
+  background: rgb(97, 93, 70);
+  background: linear-gradient(50deg, rgb(145, 17, 17) 0%, rgb(231, 226, 226) 100%);
 }
-.iconstyle{
+
+:global(.MuiSvgIcon-root) {
+  &.iconstyle {
     margin-top: 20px;
     margin-left: 20px;
-    color:red;
+    color: red !important;
+  }
 }
-.align {
-  margin: 2rem auto;
-  background-color: #f9f6fb !important;
-  box-shadow: 0 4px 20px rgba(133, 37, 37, 0.1);
-  border-radius: 16px;
-  max-width: 400px;
+
+:global(.MuiCard-root) {
+  &.align {
+    margin: 2rem auto;
+    background-color: #f9f6fb !important;
+    box-shadow: 0 4px 20px rgba(133, 37, 37, 0.1);
+    border-radius: 16px;
+    max-width: 400px;
+  }
 }
 
 :global(.MuiCard-root).align {

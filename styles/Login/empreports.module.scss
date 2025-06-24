@@ -1,27 +1,39 @@
-.bgcolor{
+.bgcolor {
     min-height: 100vh;
     // background: linear-gradient(to top, #852525, #aa596c, #c190ab, #d9c9dc, #ffffff);
 }
-.searchmargin{
-    border-radius: .5rem;
+
+.longPaper {
+  min-height: 600px;
+  max-height: 1000px;
+  overflow: auto;
 }
-.listmargin{
-    margin-left: 1rem;
-    padding: .3rem;
-    text-transform: capitalize !important;
-    color: #852525;
-    border-color:#852525;
-    background-color: #ffffff;
-    &:hover {
-        color:#852525;
-        background-color: #eccccc;
-        border-color: #ffffff;
+
+:global(.MuiTableHead-root) {
+    &.tablehead {
+        background-color: #dad8d8 !important;
     }
 }
-.tablehead{
-    background-color: #dad8d8;
-    
+
+:global(.MuiButton-root) {
+    &.listmargin {
+        margin-left: 1rem;
+        padding: .3rem;
+        text-transform: capitalize !important;
+        color: #852525 !important;
+        border-color: #852525 !important;
+        background-color: #ffffff !important;
+
+        &:hover {
+            color: #852525 !important;
+            background-color: #eccccc !important;
+            border-color: #ffffff !important;
+        }
+    }
 }
 
-
-
+:global(.MuiInputBase-root) {
+    &.searchmargin {
+        border-radius: .5rem !important;
+    }
+}
